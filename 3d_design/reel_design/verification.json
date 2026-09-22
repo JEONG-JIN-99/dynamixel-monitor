@@ -1,0 +1,128 @@
+[
+  {
+    "file": "Reel_w350.stl",
+    "closed_components": 1,
+    "mesh_checks_passed": true,
+    "volume_mm3": 192050.1192406769,
+    "mount_mm": [
+      33.6,
+      47.6,
+      12.7
+    ],
+    "pocket_diameter_mm": 5.0,
+    "pocket_depth_mm": 3,
+    "side_holes": [
+      {
+        "center": [
+          -16.8,
+          -11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.499999809265137
+      },
+      {
+        "center": [
+          -16.8,
+          11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.500000762939454
+      },
+      {
+        "center": [
+          16.8,
+          -11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.499999809265137
+      },
+      {
+        "center": [
+          16.8,
+          11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.50000171661377
+      }
+    ],
+    "waist_diameter_mm": 83.6,
+    "height_mm": 48.7,
+    "upper_surface_comparison_probes": 12944,
+    "max_upper_surface_deviation_mm": 0,
+    "preserved_mount_probes": 1002,
+    "preserved_mount_max_error_mm": 0.0007956050490386655,
+    "compared_to_previous_final": "C:\\workspace\\motor\\3d_design\\reel_design\\archive\\reel_cleanup_20260922_D2p5\\reel_design\\center_relief_D5_before_D2p5\\Rell_w350_relief_D5_extended.stl",
+    "side_hole_nominal_diameter_mm": 2.5,
+    "rope_holes_clear": true,
+    "physical_fit_tested": false,
+    "load_tested": false,
+    "source_sha256": "52db0d38709079b002db99035cfa38d665b3bbda14b31456a687d2c9cc430459"
+  },
+  {
+    "file": "Reel_w210.stl",
+    "closed_components": 1,
+    "mesh_checks_passed": true,
+    "volume_mm3": 112027.16347332754,
+    "mount_mm": [
+      33.6,
+      47.6,
+      12.7
+    ],
+    "pocket_diameter_mm": 5.0,
+    "pocket_depth_mm": 3,
+    "side_holes": [
+      {
+        "center": [
+          -16.8,
+          -11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.499999809265137
+      },
+      {
+        "center": [
+          -16.8,
+          11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.500000762939454
+      },
+      {
+        "center": [
+          16.8,
+          -11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.499999809265137
+      },
+      {
+        "center": [
+          16.8,
+          11,
+          5
+        ],
+        "diameter": 2.5,
+        "depth": 14.50000171661377
+      }
+    ],
+    "waist_diameter_mm": 61.2,
+    "height_mm": 48.7,
+    "upper_surface_comparison_probes": 12424,
+    "max_upper_surface_deviation_mm": 1.4479390167178146e-05,
+    "preserved_mount_probes": 1514,
+    "preserved_mount_max_error_mm": 0.0007956050490386655,
+    "compared_to_previous_final": "C:\\workspace\\motor\\3d_design\\reel_design\\archive\\reel_cleanup_20260922_D2p5\\reel_design\\center_relief_D5_before_D2p5\\Rell_w210_relief_D5_extended.stl",
+    "side_hole_nominal_diameter_mm": 2.5,
+    "rope_holes_clear": true,
+    "physical_fit_tested": false,
+    "load_tested": false,
+    "source_sha256": "88d02d63b8e59a0bdb999b432fcf3876f86b76e744272053688d1cf626148406"
+  }
+]

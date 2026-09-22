@@ -1,0 +1,29 @@
+{
+  "units": "mm",
+  "internal_dimensions": [
+    175.0,
+    220.0,
+    175.0
+  ],
+  "body_dimensions": [
+    185.0,
+    230.0,
+    180.0
+  ],
+  "overall_dimensions_with_eyes": [
+    185.0,
+    240.0,
+    202.0
+  ],
+  "wall_mm": 5.0,
+  "floor_mm": 5.0,
+  "eye_hole_diameter_mm": 8.0,
+  "eye_thickness_mm": 10.0,
+  "nonmanifold_edges": 0,
+  "inconsistently_oriented_edges": 0,
+  "connected_components": 1,
+  "signed_volume_mm3": 941760.3860291496,
+  "triangle_count": 5206,
+  "sliced": false,
+  "physical_load_tested": false
+}

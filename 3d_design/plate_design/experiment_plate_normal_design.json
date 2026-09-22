@@ -1,0 +1,87 @@
+{
+  "file": "experiment_plate_normal.stl",
+  "units": "mm",
+  "dimensions": [
+    236,
+    100,
+    20
+  ],
+  "outline": [
+    [
+      0,
+      0
+    ],
+    [
+      236,
+      0
+    ],
+    [
+      236,
+      70
+    ],
+    [
+      196,
+      70
+    ],
+    [
+      196,
+      100
+    ],
+    [
+      40,
+      100
+    ],
+    [
+      40,
+      70
+    ],
+    [
+      0,
+      70
+    ]
+  ],
+  "frame_footprint": {
+    "x": [
+      104,
+      132
+    ],
+    "y": [
+      63,
+      100
+    ],
+    "width": 28,
+    "length": 37
+  },
+  "motor_output_direction": "+Y (front)",
+  "hole_centers_xy": [
+    [
+      112,
+      69.5
+    ],
+    [
+      112,
+      93.5
+    ],
+    [
+      124,
+      69.5
+    ],
+    [
+      124,
+      93.5
+    ]
+  ],
+  "hole_diameter": 2.5,
+  "hole_depth": 15,
+  "hole_floor_z": 5,
+  "hole_spacing_xy": [
+    12,
+    24
+  ],
+  "screw": "FHS M2.5x14",
+  "screw_direction": "From frame above down into printed plate",
+  "modeled_threads": false,
+  "physical_fit_tested": false,
+  "load_tested": false,
+  "sliced": false
+}

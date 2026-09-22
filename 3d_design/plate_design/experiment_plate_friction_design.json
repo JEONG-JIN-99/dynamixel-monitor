@@ -1,0 +1,93 @@
+{
+  "file": "experiment_plate_friction.stl",
+  "units": "mm",
+  "plate_body": [
+    236,
+    100,
+    20
+  ],
+  "overall_dimensions": [
+    236,
+    100,
+    50.5
+  ],
+  "type": "integrated_fixed_guide",
+  "mount_center": [
+    118.0,
+    22.0
+  ],
+  "mount_footprint": [
+    44,
+    36
+  ],
+  "mount_top_z": 50.5,
+  "mount_above_plate": 30.5,
+  "frame": "FR12-S102K",
+  "hole_centers_xy": [
+    [
+      106,
+      16
+    ],
+    [
+      106,
+      28
+    ],
+    [
+      130,
+      16
+    ],
+    [
+      130,
+      28
+    ]
+  ],
+  "hole_diameter": 2.5,
+  "hole_depth": 15,
+  "hole_spacing_xy": [
+    24,
+    12
+  ],
+  "screw": "FHS M2.5x14",
+  "axis_height": 91.0,
+  "frame_to_axis_stack": [
+    8.5,
+    32
+  ],
+  "motor_bottom_to_axis": 35.25,
+  "reel_base_x": 140.7,
+  "reel_base_stack": [
+    118.0,
+    17,
+    2.2,
+    1.5,
+    2
+  ],
+  "guide_groove_x": 165.89999999999998,
+  "guide_center_yz": [
+    90.0,
+    36.0
+  ],
+  "guide_outer_radius": 10,
+  "guide_top_z": 46,
+  "groove_width": 3.2,
+  "groove_depth": 2,
+  "groove_root_radius": 8,
+  "rope_diameter": 2,
+  "rope_drop_center": [
+    165.89999999999998,
+    99
+  ],
+  "exit_notch_width": 8,
+  "exit_notch_depth": 4,
+  "waist_to_guide_clearance_w350": 3.2,
+  "outer_rim_floor_clearance_w350": 19.2,
+  "physical_fit_tested": false,
+  "load_tested": false,
+  "sliced": false,
+  "assumptions": [
+    "S102K side holes fasten to the lower front/rear motor case holes; outer web contacts printed support",
+    "XM430 lower case-hole to output-axis distance is32mm (40mm case-hole pitch minus8mm top-hole-to-axis)",
+    "Original surrounding screw-head offset2mm remains in reel base stack; central relief remains D5 depth3",
+    "No extra shims; nominal drawing assembly rather than physical metrology"
+  ]
+}

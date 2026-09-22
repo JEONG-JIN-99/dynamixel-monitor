@@ -1,0 +1,14 @@
+<string>:86: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+C:\workspace\motor\reel_design\center_relief_D5\build_reels.py:65: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world.use_nodes=True
+00:07.203  render           | Saved: 'C:\workspace\motor\reel_design\center_relief_D5\Rell_w350_relief_D5_extended_underside.png'
+Info: Saved as "Rell_w350_relief_D5_extended.blend"
+REEL_BUILT {"nonmanifold_edges": 0, "inconsistent_edges": 0, "connected_components": 1, "signed_volume_mm3": 192050.1192406769, "bounds_mm": [[-51.79243469238281, -51.79243469238281, 0.0], [51.79243469238281, 51.79243469238281, 48.70000076293945]], "dimensions_mm": [103.58486938476562, 103.58486938476562, 48.70000076293945], "triangles": 18050, "file": "Rell_w350_relief_D5_extended.stl", "source": "C:\\workspace\\motor\\archive\\reel_cleanup_20260922_D2p5\\reel_design\\Rell_w350.stl", "source_sha256": "0309840989ca8f393723d506be9ebb96246b8d0a210e71b68aca2f8a8b124760", "mount_dimensions_mm": [33.6, 47.6, 12.7], "pocket_diameter_mm": 5.0, "pocket_depth_mm": 3, "side_hole_diameter_mm": 2.5, "side_hole_center_z_mm": 5, "side_hole_depth_mm": 14.5, "physical_fit_tested": false, "load_tested": false}
+00:12.172  render           | Saved: 'C:\workspace\motor\reel_design\center_relief_D5\Rell_w210_relief_D5_extended_underside.png'
+Info: Saved as "Rell_w210_relief_D5_extended.blend"
+REEL_BUILT {"nonmanifold_edges": 0, "inconsistent_edges": 0, "connected_components": 1, "signed_volume_mm3": 112027.16347332754, "bounds_mm": [[-37.91994094848633, -37.91994094848633, 0.0], [37.91994094848633, 37.91994094848633, 48.70000076293945]], "dimensions_mm": [75.83988189697266, 75.83988189697266, 48.70000076293945], "triangles": 18042, "file": "Rell_w210_relief_D5_extended.stl", "source": "C:\\workspace\\motor\\archive\\reel_cleanup_20260922_D2p5\\reel_design\\Rell_w210.stl", "source_sha256": "4e163cebe08824871880edd9e1f2f54baee4fd3ec366e66151ee4a717459a225", "mount_dimensions_mm": [33.6, 47.6, 12.7], "pocket_diameter_mm": 5.0, "pocket_depth_mm": 3, "side_hole_diameter_mm": 2.5, "side_hole_center_z_mm": 5, "side_hole_depth_mm": 14.5, "physical_fit_tested": false, "load_tested": false}
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+Timer 'STL Import' took 8.71 ms
+Timer 'STL Import' took 4.65 ms
+
+Blender quit

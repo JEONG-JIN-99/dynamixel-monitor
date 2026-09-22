@@ -1,0 +1,30 @@
+# Python environments and generated files
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Local editor and agent files
+.codex/
+.codex-remote-attachments/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Measurements are shared separately; retain the directory guide and placeholders.
+/results/*
+!/results/README.md
+!/results/raw/
+/results/raw/*
+!/results/raw/.gitkeep
+
+# Generated design backups
+*.blend1
+*.blend2
+
+# Local documentation and superseded design archives
+/docs/
+/3d_design/**/archive/

@@ -1,0 +1,76 @@
+{
+  "file": "experiment_plate_mount_test_D2p5_D2p6_D2p7.stl",
+  "units": "mm",
+  "dimensions_mm": [
+    152,
+    36,
+    20
+  ],
+  "coupon_dimensions_mm": [
+    44,
+    36,
+    20
+  ],
+  "gap_mm": 10,
+  "coupons": [
+    {
+      "label": "D2.5",
+      "diameter_mm": 2.5,
+      "bounds_xy": [
+        [
+          0,
+          0
+        ],
+        [
+          44,
+          36
+        ]
+      ],
+      "hole_depth_mm": 15,
+      "hole_spacing_mm": [
+        24,
+        12
+      ]
+    },
+    {
+      "label": "D2.6",
+      "diameter_mm": 2.6,
+      "bounds_xy": [
+        [
+          54,
+          0
+        ],
+        [
+          98,
+          36
+        ]
+      ],
+      "hole_depth_mm": 15,
+      "hole_spacing_mm": [
+        24,
+        12
+      ]
+    },
+    {
+      "label": "D2.7",
+      "diameter_mm": 2.7,
+      "bounds_xy": [
+        [
+          108,
+          0
+        ],
+        [
+          152,
+          36
+        ]
+      ],
+      "hole_depth_mm": 15,
+      "hole_spacing_mm": [
+        24,
+        12
+      ]
+    }
+  ],
+  "source_sha256": "d9eef41b704fcf932f05bf732497d00feebd6f39297ceab38b43defdf0c5c263",
+  "physical_fit_tested": false
+}

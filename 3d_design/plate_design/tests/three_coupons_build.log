@@ -1,0 +1,13 @@
+C:\workspace\motor\3d_design\plate_design\tests\build_mount_tests.py:56: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat=bpy.data.materials.new(body.name);mat.use_nodes=True
+C:\workspace\motor\3d_design\plate_design\tests\build_mount_tests.py:60: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world.use_nodes=True;scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.8,.84,.9,1)
+00:06.328  render           | Saved: 'C:\workspace\motor\3d_design\plate_design\tests\experiment_plate_mount_test_D2p5_D2p6_D2p7_preview.png'
+Info: Saved as "experiment_plate_mount_test_D2p5_D2p6_D2p7.blend"
+THREE_COUPONS_BUILT C:\workspace\motor\3d_design\plate_design\tests\experiment_plate_mount_test_D2p5_D2p6_D2p7.stl
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+Timer 'STL Import' took 3.99 ms
+Timer 'STL Import' took 2.74 ms
+Timer 'STL Import' took 3.14 ms
+
+Blender quit

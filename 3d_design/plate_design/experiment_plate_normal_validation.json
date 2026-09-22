@@ -1,0 +1,136 @@
+{
+  "independently_reimported": true,
+  "connected_components": 1,
+  "nonmanifold_edges": 0,
+  "inconsistent_edges": 0,
+  "degenerate_faces": 0,
+  "signed_volume_mm3": 423705.5937162187,
+  "bounds_mm": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      236.0,
+      100.0,
+      20.0
+    ]
+  ],
+  "triangles": 2082,
+  "dimensions_mm": [
+    236.0,
+    100.0,
+    20.0
+  ],
+  "file": "experiment_plate_normal.stl",
+  "nominal_hole_diameter_mm": 2.5,
+  "holes": [
+    {
+      "entry_center_mm": [
+        112,
+        69.5,
+        20
+      ],
+      "depth_mm": 15,
+      "remaining_floor_mm": 5,
+      "diameter_measurements_mm": [
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347
+      ],
+      "entrance_probe_count": 24
+    },
+    {
+      "entry_center_mm": [
+        112,
+        93.5,
+        20
+      ],
+      "depth_mm": 15,
+      "remaining_floor_mm": 5,
+      "diameter_measurements_mm": [
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347
+      ],
+      "entrance_probe_count": 24
+    },
+    {
+      "entry_center_mm": [
+        124,
+        69.5,
+        20
+      ],
+      "depth_mm": 15,
+      "remaining_floor_mm": 5,
+      "diameter_measurements_mm": [
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347
+      ],
+      "entrance_probe_count": 24
+    },
+    {
+      "entry_center_mm": [
+        124,
+        93.5,
+        20
+      ],
+      "depth_mm": 15,
+      "remaining_floor_mm": 5,
+      "diameter_measurements_mm": [
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347,
+        2.499323419571442,
+        2.499483603550181,
+        2.49925811011565,
+        2.4994842712600347
+      ],
+      "entrance_probe_count": 24
+    }
+  ],
+  "hole_spacing_xy_mm": [
+    12,
+    24
+  ],
+  "checks_passed": true,
+  "physical_fit_tested": false,
+  "load_tested": false,
+  "sliced": false,
+  "unchanged_surface_probes": 32,
+  "unchanged_surface_max_error_mm": 0
+}

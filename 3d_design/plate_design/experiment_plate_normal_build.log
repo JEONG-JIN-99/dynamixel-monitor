@@ -1,0 +1,10 @@
+C:\workspace\motor\3d_design\plate_design\build_experiment_plate_normal.py:64: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes=True
+C:\workspace\motor\3d_design\plate_design\build_experiment_plate_normal.py:69: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world.use_nodes=True
+00:06.719  render           | Saved: 'C:\workspace\motor\3d_design\plate_design\experiment_plate_normal_preview.png'
+Info: Saved as "experiment_plate_normal.blend"
+BUILD_COMPLETE C:\workspace\motor\3d_design\plate_design\experiment_plate_normal.stl
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
