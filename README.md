@@ -30,14 +30,16 @@ motor/
 ## 설치
 
 Python 3.11 이상을 사용합니다(TOML 읽기용 표준 라이브러리 사용).
-프로젝트 루트의 PowerShell에서:
+프로젝트 루트의 PowerShell에서 실행합니다. 아래는 가상환경 이름을 `.venv`로 만드는 예시입니다:
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
-이미 `.venv`가 있으면 생성 단계는 생략합니다.
+이미 가상환경이 있으면 생성 단계는 생략하고 본인의 환경을 활성화하세요.
+가상환경 이름이나 경로가 다르면 활성화 경로를 맞춰 주세요. 이후 명령은 활성화된 터미널에서 실행합니다.
 확인한 로컬 환경은 Python 3.14.5, pyserial 3.5, dynamixel-sdk 4.0.5입니다.
 
 ## 실험 설정
@@ -109,16 +111,18 @@ load_kg = 0.5
 
 ## 실행
 
+본인의 가상환경을 활성화한 뒤 프로젝트 루트에서 실행합니다. 새 터미널을 열었다면 가상환경을 다시 활성화하세요.
+
 모터에 연결하지 않고 설정만 확인:
 
 ```powershell
-.\.venv\Scripts\python.exe src\experiment\repeated_cycle.py --check-config
+python src\experiment\repeated_cycle.py --check-config
 ```
 
 반복 왕복 실험:
 
 ```powershell
-.\.venv\Scripts\python.exe src\experiment\repeated_cycle.py
+python src\experiment\repeated_cycle.py
 ```
 
 현재 위치를 기준으로 설정한 회전수만큼 이동 → 상단 대기 → 기준 위치 복귀 → 하단 대기를 반복합니다.
@@ -132,7 +136,7 @@ load_kg = 0.5
 다른 설정 파일을 선택할 수도 있습니다.
 
 ```powershell
-.\.venv\Scripts\python.exe src\experiment\repeated_cycle.py --config config\w350.toml
+python src\experiment\repeated_cycle.py --config config\w350.toml
 ```
 
 이 예시는 `experiment.toml`을 `w350.toml`로 복사해서 수정한 경우입니다.
@@ -282,7 +286,7 @@ XM은 전류 열, XL은 부하 열을 사용하므로 아래 표의 모든 모�
 ## 검증 및 협업
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+python -m unittest discover -s tests -v
 ```
 
 설정 검증, 모델별 매핑, 음수 전류 환산, 모터·조건·부하량별 파일 분리,
