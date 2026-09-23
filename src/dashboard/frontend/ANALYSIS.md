@@ -1,0 +1,98 @@
+# 상세 분석 페이지와 협업 데이터 계약
+
+## 역할
+
+`/trends`는 수집 방식과 독립된 표시 화면이다. 백엔드는 모터의 일반 Control Table 53개 항목과 문제 탐지 알고리즘 결과를 제공한다. 프론트엔드는 단위 변환, 최근 60초 표시, 추종 오차 계산을 수행한다. 모터 제어와 문제 탐지 알고리즘은 구현하지 않는다. 간접 주소와 간접 데이터는 표시 대상에 포함하지 않는다.
+
+실험 코드는 변경하지 않았다. 백엔드 MOCK 수신 구조는 [협업 전송 계약](../MOCK_BACKEND.md)을 따른다. 기존 WebSocket 데이터와 가상 데이터를 연결해 화면을 확인할 수 있다. 개요·모터 페이지의 화면 구성은 유지했다.
+
+## 화면
+
+- 측정 그래프 6개: 전류(A), 속도(rpm), 위치(pulse), PWM(%), 입력 전압(V), 내부 온도(°C).
+- 속도에는 목표 속도 궤적, 위치에는 목표 위치 궤적과 명령 목표 위치를 함께 표시한다.
+- 계산 그래프 2개: 실제 위치 − 위치 궤적, 실제 속도 − 속도 궤적. 0을 중심으로 표시한다.
+- 상태 변화 타임라인은 화면에서 제거했다. 진단 결과와 그래프의 이상 구간 음영으로 상태를 표시한다.
+- 수집 주기 → 최근 60초 → 화면 갱신 0.1초 순으로 표시한다. 화면 갱신 시 수신 샘플을 평균내지 않고 전부 사용한다.
+- 8개 그래프의 커서·확대 범위 연동, 범례 표시 전환, 확대, Esc 복귀, 화면 일시정지·재개를 지원한다.
+- 일시정지는 화면만 고정한다. 수신은 계속되고 재개하면 현재 버퍼로 복귀한다. 모터·소스·실행 변경 시 고정을 해제한다.
+- 설정 한계선은 마지막 수신 설정값을 표시하는 선택 기능이다. 알고리즘 이상 임계값이 아니다. 전류/PWM은 ±설정 한계, 전압은 상·하한, 온도는 상한을 표시한다.
+- 알고리즘 fault 구간만 붉은 음영으로 표시한다. 큰 오차나 하드웨어 오류로 알고리즘 결과를 생성하지 않는다.
+- 수신이 멈추면 마지막 측정 구간을 유지한다. 시간이 지났다는 이유로 새 값을 만들지 않는다.
+
+## 협업자가 제공할 최소 의미 데이터
+
+`src/types/analysis.ts`의 `MotorFrame`과 `src/services/analysis.ts`의 `analysisPoint` / `analysisHistory`가 전송 방식에 독립된 경계다.
+
+```ts
+interface MotorFrame {
+  id: number;
+  model: string;                  // XM430-W210 / XM430-W350
+  timestamp: number;              // 측정 시각, Unix milliseconds
+  elapsedMs: number;              // 실행 시작부터 경과 시간
+  registers: Record<string, {
+    raw: number | null;
+    receivedAt: number;           // 이 주소의 측정 시각, Unix milliseconds
+    status: 'received' | 'unsupported' | 'error';
+    error?: string;
+  }>;
+  diagnosis?: {
+    state: 'waiting' | 'normal' | 'fault';
+    codes: string[];
+  } | null;
+}
+```
+
+`elapsedMs`는 프론트엔드 연결 어댑터가 `timestamp - 실행 시작 시각`으로 생성할 수 있다. 백엔드가 오차·평균·그래프용 배열을 별도로 계산할 필요는 없다. 주소 키는 `"126"` 같은 10진수 문자열이다. 53개 주소를 모두 지원하지만 매번 53개를 보낼 필요는 없다.
+
+예시(필요한 주소만 발췌):
+
+```json
+{
+  "id": 1,
+  "model": "XM430-W210",
+  "timestamp": 1790000000100,
+  "elapsedMs": 100,
+  "registers": {
+    "11": { "raw": 4, "receivedAt": 1790000000000, "status": "received" },
+    "126": { "raw": 100, "receivedAt": 1790000000100, "status": "received" },
+    "132": { "raw": 1010, "receivedAt": 1790000000100, "status": "received" },
+    "140": { "raw": 1000, "receivedAt": 1790000000100, "status": "received" }
+  },
+  "diagnosis": { "state": "normal", "codes": [] }
+}
+```
+
+이 예시는 전류 0.269 A, 위치 추종 오차 10 pulse를 표시한다. 오류 종류는 `services/overview.ts`의 한글 매핑을 공유한다. 현재 코드는 overvoltage, undervoltage, overload, undercurrent, friction, gear_backlash를 지원하며 알고리즘 계약 확정 시 확장할 수 있다. 결과 미수신은 판정 대기다.
+
+### 수신·시점 규칙
+
+- 같은 측정 주기에 수집한 값은 같은 측정 시각을 사용한다. 추종 오차는 두 원시값의 `receivedAt`이 같은 경우에만 계산한다. 수신 시각으로 무조건 덮어써서 오래된 값과 새 값을 결합하지 않는다.
+- 원시 정수에 부호 해석과 공식 배율을 적용한다. 이미 단위 변환한 값을 `raw`에 넣지 않는다. 부호 있는 주소는 음의 정수와 unsigned 2의 보수 표현을 모두 지원한다.
+- 미수신은 주소 생략, 실패·미지원은 해당 status와 raw:null을 보낸다. 0으로 대체하지 않는다. 명시적 읽기 실패가 있으면 기존 변환값으로 우회하지 않는다.
+- 실시간 주소는 과거 값을 복사해서 새 측정값처럼 반복 전송하지 않는다. 프론트엔드는 실시간 미수신 값을 이전 값으로 채우지 않는다.
+- 설정은 최초·변경 시 제공하고 연결 어댑터가 모터별 메타데이터에 보관한다. 동작 모드(11)와 제한값(31/32/34/36/38)은 샘플 내부에서도 인식한다. 60초가 지나 설정 샘플이 사라져도 최신 설정을 유지하려면 메타데이터에 보관해야 한다.
+- 모드 변경 시 해당 시각의 샘플에도 모드를 함께 제공한다. 현재 시점보다 미래의 메타데이터를 과거 샘플에 적용하지 않는다.
+- 위치 오차는 모드 3/4/5, 속도 오차는 모드 1/3/4/5에서 계산한다. 동작 모드 미수신 시 계산을 대기한다. 모드에 해당하지 않는 궤적은 숨긴다.
+- 수집 주기 대비 2.5배를 초과한 샘플 간격에는 그래프 단절점을 넣는다. 타임라인도 긴 수집 공백에 상태를 연장하지 않는다.
+- 알고리즘 판정은 각 측정 샘플에 대응하는 결과를 제공한다. 비동기 결과를 사용한다면 연결 어댑터에서 대상 측정 시각에 맞춰 결합해야 한다.
+
+## 현재 전송 연결과 향후 교체 범위
+
+지금은 `services/motorDataService.ts` → `services/telemetryAdapter.ts` → `stores/motorStore.ts` → `useOverview` → `TrendsView.vue` 순서로 수신한다. 기존 schemaVersion:1 snapshot/samples/system 메시지의 세션·실행 ID, 증가하는 seq는 현재 연결 계층의 요구사항이다. 레지스터와 diagnosis를 이 메시지의 sample에 넣으면 상세분석은 기존 position/current 등의 중복 변환 필드 없이도 동작한다(브라우저 테스트로 검증).
+
+향후 협업자의 REST/WebSocket 형식이 결정되면 연결·저장 어댑터를 바꾸면 된다. `MotorFrame` 자체를 현재 WebSocket으로 곧바로 보내는 것은 기존 envelope와 다르므로 지원하지 않는다. 개요에 필요한 변환 필드는 telemetryAdapter.ts가 받은 레지스터에서 변환한다. 개요·모터·상세분석 모두 raw-only 서버 샘플로 동작한다. 상세분석의 그래프와 계산 함수는 전송 구현에 의존하지 않는다.
+
+## 구현 파일
+
+- `src/views/TrendsView.vue`: 화면 구성, 모터 선택, 표시 일시정지.
+- `src/services/analysis.ts`: 원시값 변환, 모드별 오차, 수집 공백, 상태 비트 해석.
+- `src/types/analysis.ts`: 협업 프레임과 화면용 타입.
+- `src/components/charts/TelemetryChart.vue`: 공통 그래프, 연동·기준선·이상 구간.
+- `src/styles/trends.css`: 상세분석 전용 반응형 스타일.
+
+## 검증과 공식 기준
+
+단위 테스트는 레지스터만 있는 입력, 부호 해석, 미수신, 읽기 실패, 시간 불일치, 모드 구분, 설정 보존, 수집 공백, 판정 분리를 검증한다. Playwright는 레지스터 전용 WebSocket 입력, 갱신·일시정지·소스 변경, 커서 연동, 1920/1440/390 화면 폭을 검증한다.
+
+- [XM430-W210 공식 Control Table 및 상태 비트](https://emanual.robotis.com/docs/en/dxl/x/xm430-w210/#moving-status123)
+- [XM430-W350 공식 Control Table](https://emanual.robotis.com/docs/en/dxl/x/xm430-w350/#control-table)

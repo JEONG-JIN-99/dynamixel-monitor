@@ -1,0 +1,33 @@
+# 실험 전에 이 파일을 수정하고 Python 코드를 실행하세요.
+[motor]
+# XM430-W210 / XM430-W350 / XL430-W250 중 선택
+name = "XM430-W210"
+port = "COM6"                # U2D2 통신 포트
+baudrate = 57600            # 모터와 일치시킬 통신 속도 [bps]
+id = 1                       # 제어할 모터 ID
+protocol_version = 2.0       # DYNAMIXEL 통신 프로토콜
+
+[condition]
+# normal: 정상, overvoltage: 과전압, undervoltage: 과소전압, overload: 과부하
+# undercurrent: 과소전류, friction: 마찰, gear_backlash: 기어 백래시
+name = "normal"              # 실험 조건 이름 (분류·저장용이며 모터 설정은 바꾸지 않음)
+load_kg = 0.0                # 과부하 부하량 [kg]; 예: 0.5 → overload_0.5kg, 나머지 조건 조건 실험에선 0
+
+[experiment]
+turns = 1.0                   # 한 번 이동할 회전수 (양수)
+direction = 1                 # 모터 정면(출력축 쪽) 기준: 1 = 반시계(CCW), -1 = 시계(CW); 복귀는 반대 방향
+acceleration_ms = 2000        # 가속 시간 [ms] (감속 시간도 동일)
+profile_duration_ms = 6000    # 전체 이동 시간 [ms] (가속 + 등속 + 감속)
+top_dwell_sec = 1.0           # 반복 실험의 상단 대기 시간 [초]
+bottom_dwell_sec = 1.0        # 반복 실험의 하단 대기 시간 [초]
+max_cycles = 0                # 왕복 횟수; 0이면 q + Enter 입력 후 현재 왕복까지 완료하고 종료
+
+[logging]
+sample_interval_sec = 0.1     # 데이터 수집 간격 [초]
+print_interval_sec = 1.0      # 화면 상태 출력 간격 [초]
+flush_every_rows = 10         # 0.1초 × 10행: 약 1초마다 CSV 반영
+
+[control]
+move_timeout_sec = 30.0       # 한 번의 이동에서 도착을 기다리는 최대 시간 [초]
+position_tolerance_pulse = 10 # 도착 판정의 위치 허용 오차 [pulse] (10 ≈ 0.88도)
+torque_off_on_normal_exit = false  # false: 정상 종료 후 위치 유지, true: 모터 출력 해제

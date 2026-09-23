@@ -1,3 +1,6 @@
-# 구조 정리 시 로컬 환경에 설치되어 있던 버전입니다.
+# Python 3.11+; 공용 .venv: 기존 실험과 대시보드의 의존성입니다.
 pyserial==3.5
 dynamixel-sdk==4.0.5
+
+# 검증된 웹 서버 및 테스트 의존성 (SDK 버전도 위와 동일)
+-r src/dashboard/requirements.lock

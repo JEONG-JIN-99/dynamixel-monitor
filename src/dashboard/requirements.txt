@@ -1,0 +1,7 @@
+anyio>=4,<5
+fastapi>=0.115,<1
+uvicorn[standard]>=0.34,<1
+httpx>=0.28,<1
+pytest>=8,<10
+pyserial==3.5
+dynamixel-sdk==4.0.5
