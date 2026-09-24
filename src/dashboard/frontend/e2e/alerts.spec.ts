@@ -1,8 +1,10 @@
+import { selectSource } from "./sourceNavigation";
 import { test, expect, type Page } from "@playwright/test";
 
 const storageKey = "motor-dashboard.diagnosis-alerts.v1";
 async function stream(page: Page) {
   let seq = 0;
+  let ready = false;
   let send: (data: string) => void = () => {
     throw new Error("Socket not ready");
   };
@@ -59,7 +61,12 @@ async function stream(page: Page) {
     };
   }
   history.push(row([]));
-  await page.routeWebSocket("**/ws/telemetry", (socket) => {
+  await page.routeWebSocket("**/ws/telemetry*", (socket) => {
+    system.sourceMode =
+      new URL(socket.url()).searchParams.get("source") === "mock"
+        ? "mock"
+        : "csv";
+    ready = true;
     send = (data) => socket.send(data);
     close = () => socket.close();
     socket.send(
@@ -77,7 +84,7 @@ async function stream(page: Page) {
         system,
         experiment: {
           runId: identity.runId,
-          status: "running",
+          status: system.experimentStatus,
           sampleIntervalSec: 0.1,
           startedAt: "2026-09-21T12:00:00Z",
         },
@@ -85,6 +92,14 @@ async function stream(page: Page) {
     );
   });
   return {
+    ready: () => ready,
+    seed(codes: string[]) {
+      history.push(row(codes));
+    },
+    complete() {
+      system.experimentStatus = "completed";
+      system.writerActive = false;
+    },
     push(codes: string[] | null, patch = {}) {
       const sample = row(codes, patch);
       history.push(sample);
@@ -113,62 +128,55 @@ async function stream(page: Page) {
   };
 }
 
-test("unread episodes survive reload, reading clears badge, recovery and recurrence are distinct", async ({
+test("individual confirmation survives reload without clearing other alerts or resolving faults", async ({
   page,
 }) => {
   const source = await stream(page);
-  await page.goto("/");
+  await page.goto("/?source=csv");
   await expect(page.locator(".connection-badge")).toContainText("수신 중");
   source.push(["overload"]);
   source.push(["overload"]);
   source.push(["overload", "friction"]);
   await expect(page.locator(".alert-badge")).toHaveText("2");
-  await expect
-    .poll(() =>
-      page.evaluate(
-        (key) => JSON.parse(localStorage.getItem(key) ?? "{}").records?.length,
-        storageKey,
-      ),
-    )
-    .toBe(2);
-  await page.reload();
-  await expect(page.locator(".alert-badge")).toHaveText("2");
   await page.getByRole("link", { name: "알림", exact: true }).click();
   await expect(page.locator(".alert-row")).toHaveCount(2);
-  await expect(page.locator('.alert-row[data-status="active"]')).toHaveCount(2);
-  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await expect(page.locator(".alert-badge")).toHaveText("2");
+  const overload = page.locator(".alert-row").filter({ hasText: "과부하" });
+  await overload.locator(".alert-read-target").click();
+  await expect(overload).toHaveAttribute("data-read", "true");
+  await expect(overload).toHaveAttribute("data-status", "read");
+  await expect(page.locator(".alert-badge")).toHaveText("1");
+  await overload.locator(".alert-read-target").click();
+  await expect(page.locator(".alert-badge")).toHaveText("1");
+  await page.reload();
+  await expect(page.locator(".alert-row")).toHaveCount(2);
+  await expect(page.locator(".alert-badge")).toHaveText("1");
+  await expect(overload).toHaveAttribute("data-read", "true");
   source.push(null);
-  await expect(page.locator('.alert-row[data-status="unknown"]')).toHaveCount(
-    2,
-  );
-  source.push(["friction"]);
-  await expect(page.locator('.alert-row[data-status="resolved"]')).toHaveCount(
-    1,
-  );
-  await expect(page.locator('.alert-row[data-status="active"]')).toHaveCount(1);
+  await expect(page.locator('.alert-row[data-active="false"]')).toHaveCount(2);
   source.push([]);
-  await expect(page.locator('.alert-row[data-status="resolved"]')).toHaveCount(
-    2,
-  );
-  await page.getByRole("link", { name: "개요", exact: true }).click();
+  await expect(page.locator('.alert-row[data-active="false"]')).toHaveCount(2);
+  await expect(page.locator(".alert-badge")).toHaveText("1");
+  const friction = page.locator(".alert-row").filter({ hasText: "마찰" });
+  await friction.locator(".alert-read-target").focus();
+  await page.keyboard.press("Space");
+  await expect(page.locator(".alert-badge")).toHaveCount(0);
   source.push(["overload"]);
   await expect(page.locator(".alert-badge")).toHaveText("1");
-  await page.getByRole("link", { name: "알림", exact: true }).click();
-  await expect(page.locator(".alert-row")).toHaveCount(3);
+  await expect(page.locator('.alert-row[data-read="false"]')).toHaveCount(1);
   await page.reload();
   await expect(page.locator(".alert-row")).toHaveCount(3);
-  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await expect(page.locator(".alert-badge")).toHaveText("1");
 });
 
-test("only a visible alerts page auto-reads arrivals, sources and statuses stay separate", async ({
+test("visible arrivals, tab return and source switches never auto-confirm alerts", async ({
   page,
 }) => {
   const source = await stream(page);
-  await page.goto("/alerts");
+  await page.goto("/alerts?source=csv");
   await expect(page.locator(".alerts-empty")).toBeVisible();
   source.push(["overload"]);
-  await expect(page.locator(".alert-row")).toHaveCount(1);
-  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await expect(page.locator(".alert-badge")).toHaveText("1");
   await page.evaluate(() => {
     Object.defineProperty(document, "visibilityState", {
       configurable: true,
@@ -177,7 +185,7 @@ test("only a visible alerts page auto-reads arrivals, sources and statuses stay 
     document.dispatchEvent(new Event("visibilitychange"));
   });
   source.push(["overload", "friction"]);
-  await expect(page.locator(".alert-badge")).toHaveText("1");
+  await expect(page.locator(".alert-badge")).toHaveText("2");
   await page.evaluate(() => {
     Object.defineProperty(document, "visibilityState", {
       configurable: true,
@@ -185,20 +193,39 @@ test("only a visible alerts page auto-reads arrivals, sources and statuses stay 
     });
     document.dispatchEvent(new Event("visibilitychange"));
   });
-  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await expect(page.locator(".alert-badge")).toHaveText("2");
   source.stale();
-  await expect(page.locator('.alert-row[data-status="unknown"]')).toHaveCount(
-    2,
-  );
-  await page.getByRole("button", { name: "가상 데이터 보기" }).click();
-  await expect(page.locator(".alerts-empty")).toBeVisible();
-  await page.getByRole("button", { name: "실험 CSV로 돌아가기" }).click();
+  await expect(page.locator('.alert-row[data-active="false"]')).toHaveCount(2);
+  await selectSource(page, "mock");
   await expect(page.locator(".alert-row")).toHaveCount(2);
-  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await selectSource(page, "csv");
+  await expect(page.locator(".alert-row")).toHaveCount(2);
+  await expect(page.locator(".alert-badge")).toHaveText("2");
   source.disconnect();
-  await expect(page.locator('.alert-row[data-status="unknown"]')).toHaveCount(
-    2,
-  );
+  await expect(page.locator('.alert-row[data-active="false"]')).toHaveCount(2);
+});
+
+test("pagination, search and filtering preserve unread counts until a row is activated", async ({
+  page,
+}) => {
+  const source = await stream(page);
+  await page.goto("/alerts?source=csv");
+  await expect(page.locator(".alerts-empty")).toBeVisible();
+  for (let id = 1; id <= 27; id++) source.push(["overload"], { id });
+  await expect(page.locator(".alert-badge")).toHaveText("27");
+  await expect(page.locator(".alert-row")).toHaveCount(25);
+  await page.getByRole("button", { name: "다음 알림 페이지" }).click();
+  await expect(page.locator(".alert-row")).toHaveCount(2);
+  await expect(page.locator(".alert-badge")).toHaveText("27");
+  await page.locator(".alert-read-target").first().focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".alert-badge")).toHaveText("26");
+  await page.getByRole("searchbox", { name: "알림 검색" }).fill("ID 27");
+  await expect(page.locator(".alert-row")).toHaveCount(1);
+  await page.getByRole("button", { name: "발생 중", exact: true }).click();
+  await expect(page.locator(".alert-badge")).toHaveText("26");
+  await page.locator(".alert-read-target").click();
+  await expect(page.locator(".alert-badge")).toHaveText("25");
 });
 
 test("storage failures and invalid saved data leave the dashboard usable", async ({
@@ -211,14 +238,14 @@ test("storage failures and invalid saved data leave the dashboard usable", async
     };
   }, storageKey);
   const source = await stream(page);
-  await page.goto("/alerts");
+  await page.goto("/alerts?source=csv");
   await expect(page.locator(".alerts-notice").first()).toContainText(
-    "불러오지 못",
+    "알림 기록 오류",
   );
   source.push(["overload"]);
   await expect(page.locator(".alert-row")).toHaveCount(1);
   await expect(page.locator(".alerts-notice").first()).toContainText(
-    "저장하지 못",
+    "알림 기록 오류",
   );
 });
 
@@ -228,7 +255,7 @@ for (const width of [1440, 900, 390]) {
     page.on("pageerror", (e) => errors.push(e.message));
     const source = await stream(page);
     await page.setViewportSize({ width, height: 1000 });
-    await page.goto("/");
+    await page.goto("/?source=csv");
     await expect(page.locator(".connection-badge")).toContainText("수신 중");
     source.push(["overload", "friction"]);
     source.push(["friction"]);
@@ -251,7 +278,21 @@ for (const width of [1440, 900, 390]) {
       path: "../runtime/alerts-" + width + ".png",
       fullPage: true,
     });
+    await expect(page.locator(".alerts-summary .resolved strong")).toHaveText(
+      "1건",
+    );
     await page.getByRole("button", { name: "해제됨", exact: true }).click();
+    await expect(page.locator(".alert-row")).toHaveCount(1);
+    await expect(page.locator(".alert-row")).toContainText("과부하");
+    await expect(page.locator(".alert-row")).toHaveAttribute(
+      "data-read",
+      "false",
+    );
+    await expect(page.locator(".alert-badge")).toHaveText("4");
+    await page.getByRole("button", { name: "전체", exact: true }).click();
+    await page.locator(".alert-read-target").first().click();
+    await expect(page.locator(".alert-badge")).toHaveText("3");
+    await page.getByRole("button", { name: "확인", exact: true }).click();
     await expect(page.locator(".alert-row")).toHaveCount(1);
     await page.getByRole("button", { name: "전체", exact: true }).click();
     await page.getByRole("searchbox", { name: "알림 검색" }).fill("XM430-W350");
@@ -266,3 +307,61 @@ for (const width of [1440, 900, 390]) {
     expect(errors).toEqual([]);
   });
 }
+
+test("completed mock history does not create four unread alerts after entry, reload or source switch", async ({
+  page,
+}) => {
+  const source = await stream(page);
+  source.seed(["friction"]);
+  source.seed(["overload"]);
+  source.seed([]);
+  source.seed(["friction"]);
+  source.seed(["overload"]);
+  source.seed([]);
+  source.complete();
+  await page.goto("/alerts?source=mock");
+  await expect.poll(source.ready).toBe(true);
+  await expect(page.locator(".alerts-empty")).toBeVisible();
+  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator(".alerts-empty")).toBeVisible();
+  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await selectSource(page, "csv");
+  await selectSource(page, "mock");
+  await expect(page.locator(".alert-badge")).toHaveCount(0);
+  await expect(page.getByText("상태 확인 대기", { exact: true })).toHaveCount(
+    0,
+  );
+  await expect(
+    page.getByRole("button", { name: "해제됨", exact: true }),
+  ).toBeVisible();
+});
+test("mock row confirmation changes summary, filters and badge and survives reload", async ({
+  page,
+}) => {
+  const source = await stream(page);
+  await page.goto("/alerts?source=mock");
+  await expect.poll(source.ready).toBe(true);
+  await expect(page.locator(".alerts-empty")).toBeVisible();
+  source.push(["friction", "overload"]);
+  await expect(page.locator(".alerts-summary .pending strong")).toContainText(
+    "2",
+  );
+  await expect(page.locator(".alert-badge")).toHaveText("2");
+  await page.getByRole("button", { name: "미확인", exact: true }).click();
+  await page.locator(".alert-read-target").first().click();
+  await expect(page.locator(".alert-row")).toHaveCount(1);
+  await expect(page.locator(".alerts-summary .success strong")).toContainText(
+    "1",
+  );
+  await expect(page.locator(".alert-badge")).toHaveText("1");
+  await page.getByRole("button", { name: "확인", exact: true }).click();
+  await expect(page.locator(".alert-row")).toHaveCount(1);
+  await expect(
+    page.locator(".alert-row .alert-time time").last(),
+  ).not.toHaveText("—");
+  await page.reload();
+  await expect(page.locator(".alert-row")).toHaveCount(2);
+  await expect(page.locator(".alert-badge")).toHaveText("1");
+  await expect(page.locator('.alert-row[data-read="true"]')).toHaveCount(1);
+});

@@ -34,6 +34,10 @@ use([
 ]);
 const props = defineProps<{
   samples: PlotPoint[];
+  timeRange?: { start: number; end: number };
+  formatTime?: (seconds: number, precise?: boolean) => string;
+  tooltipTime?: (seconds: number) => string;
+  focusRange?: { start: number; end: number } | null;
   group?: string;
   zeroCentered?: boolean;
   referenceLines?: ReferenceLine[];
@@ -46,6 +50,7 @@ const props = defineProps<{
   fields: PlotField[];
   wide?: boolean;
 }>();
+const emit = defineEmits<{ inspect: [] }>();
 const latest = computed(() => props.samples.at(-1) ?? null);
 const currentValue = computed(() => latest.value?.[props.fields[0]!.key]);
 const element = ref<HTMLDivElement>();
@@ -115,14 +120,24 @@ function render() {
     },
     xAxis: {
       type: "value",
-      min: Math.max(0, last - 60),
-      max: Math.max(60, last),
+      min: props.timeRange?.start ?? Math.max(0, last - 60),
+      max: props.timeRange?.end ?? Math.max(60, last),
+      axisPointer: {
+        label: {
+          formatter: (params: { value: number }) =>
+            props.tooltipTime?.(Number(params.value)) ?? String(params.value),
+        },
+      },
       axisLine: { lineStyle: { color: "#3a4b62" } },
       axisTick: { show: false },
       axisLabel: {
         color: "#9baec8",
         fontSize: 10,
-        formatter: (v: number) => v.toFixed(0) + "초",
+        formatter: (v: number) =>
+          props.formatTime
+            ? props.formatTime(v, true)
+            : `${Number(v.toFixed(3))}초`,
+        hideOverlap: true,
       },
       splitLine: { show: false },
     },
@@ -218,6 +233,10 @@ function resetZoom() {
 }
 onMounted(() => {
   chart = init(element.value!);
+  chart.on("datazoom", (event: any) => {
+    const zoom = event.batch?.[0] ?? event;
+    if ((zoom.start ?? 0) > 0 || (zoom.end ?? 100) < 100) emit("inspect");
+  });
   if (props.group) {
     chart.group = props.group;
     connect(props.group);
@@ -226,10 +245,33 @@ onMounted(() => {
   observer.observe(element.value!);
   render();
 });
-watch(() => props.samples, render);
+watch(
+  () => [
+    props.samples,
+    props.timeRange,
+    props.referenceLines,
+    props.faultSegments,
+    props.formatTime,
+    props.tooltipTime,
+  ],
+  render,
+);
 watch(hiddenFields, render);
 watch(() => props.runId, resetZoom);
-watch(() => [props.referenceLines, props.faultSegments], render);
+watch(
+  () => props.focusRange,
+  (range) => {
+    if (range)
+      chart?.dispatchAction({
+        type: "dataZoom",
+        startValue: range.start,
+        endValue: range.end,
+      });
+    else resetZoom();
+  },
+  { flush: "post" },
+);
+
 function onKeydown(event: KeyboardEvent) {
   if (event.key === "Escape") expanded.value = false;
 }

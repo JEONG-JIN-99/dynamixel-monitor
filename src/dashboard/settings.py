@@ -11,18 +11,27 @@ class Settings:
     host: str = "127.0.0.1"
     port: int = 8000
     manifest_path: Path = ROOT / "runtime" / "current_experiment.json"
-    data_root: Path = ROOT.parents[1] / "results" / "raw"
+    data_root: Path = ROOT / "runtime" / "standalone_runs"
+    mock_data_root: Path = ROOT / "runtime" / "mock_runs"
     poll_interval_sec: float = 0.1
     retention_sec: float = 60
     max_samples: int = 12000
     subscriber_queue_size: int = 32
+
+    @property
+    def experiment_data_root(self):
+        return self.mock_data_root.parent / "experiment_runs"
+
+    @property
+    def control_root(self):
+        return self.mock_data_root.parent / "control"
 
     @classmethod
     def load(cls, path=DEFAULT_CONFIG):
         path = Path(path).resolve()
         with path.open("rb") as handle:
             values = tomllib.load(handle)
-        for key in ("manifest_path", "data_root"):
+        for key in ("manifest_path", "data_root", "mock_data_root"):
             if key in values:
                 values[key] = (path.parent / values[key]).resolve()
         result = cls(**values)

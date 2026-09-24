@@ -13,6 +13,7 @@ export interface DiagnosisAlert {
   lastSeenAt: number;
   resolvedAt: number | null;
   read: boolean;
+  readAt?: number | null;
 }
 
 export interface AlertCursor {

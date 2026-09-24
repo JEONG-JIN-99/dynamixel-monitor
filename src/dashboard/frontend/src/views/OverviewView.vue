@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, defineAsyncComponent } from "vue";
 import {
   Activity,
   Clock3,
@@ -11,7 +11,13 @@ import {
   Pause,
 } from "lucide-vue-next";
 import TelemetryChart from "../components/charts/TelemetryChart.vue";
-import motorImage from "../assets/motor-servo.png";
+import RunControls from "../components/control/RunControls.vue";
+import { useShaftPosition } from "../composables/useShaftPosition";
+import { elapsedTime } from "../services/analysisTime";
+const formatTooltipTime = (seconds: number) => elapsedTime(seconds, true);
+const MotorModel3D = defineAsyncComponent(
+  () => import("../components/motor/MotorModel3D.vue"),
+);
 import { useOverview } from "../composables/useOverview";
 import {
   diagnosisLabels,
@@ -22,6 +28,16 @@ import {
 } from "../services/overview";
 const { store, options, selectedKey, selectedMotor, history, latest } =
   useOverview();
+const shaftContext = computed(() =>
+  JSON.stringify([
+    store.mode,
+    store.serverSession,
+    store.sourceSession,
+    store.experiment?.runId,
+    selectedKey.value,
+  ]),
+);
+const { origin } = useShaftPosition(history, shaftContext);
 const diagnosis = computed(() => diagnosisView(latest.value));
 const interval = computed(() => {
   const seconds =
@@ -37,46 +53,15 @@ const movement = computed(() => {
   return latest.value.moving ? "회전 중" : "멈춤";
 });
 const metrics = computed(() => [
-  {
-    label: "현재 위치",
-    value: latest.value?.position,
-    unit: "pulse",
-    decimals: 0,
-  },
-  {
-    label: "현재 속도",
-    value: latest.value?.velocity,
-    unit: "rpm",
-    decimals: 1,
-  },
-  {
-    label: latest.value?.loadPercent != null ? "현재 부하" : "현재 전류",
-    value: latest.value?.loadPercent ?? latest.value?.current,
-    unit: latest.value?.loadPercent != null ? "%" : "A",
-    decimals: latest.value?.loadPercent != null ? 1 : 3,
-  },
   { label: "온도", value: latest.value?.temperature, unit: "°C", decimals: 0 },
   { label: "입력 전압", value: latest.value?.voltage, unit: "V", decimals: 1 },
   { label: "출력 PWM", value: latest.value?.pwm, unit: "%", decimals: 1 },
 ]);
 const notice = computed(() => {
-  if (store.mode === "mock")
-    return store.connection === "connected"
-      ? ""
-      : "가상 데이터 서버 연결 대기 중입니다. 마지막 수신 구간을 표시합니다.";
-  if (store.system.error) return store.system.error;
-  if (store.connection !== "connected")
-    return "데이터 서버 연결 대기 중입니다. 수신된 마지막 기록이 있으면 유지합니다.";
-  if (!store.system.readerCaughtUp)
-    return "저장된 데이터를 읽고 있습니다. 최근 60초 구간으로 이동합니다.";
-  if (
-    ["completed", "interrupted", "failed"].includes(
-      store.system.experimentStatus,
-    )
-  )
-    return "데이터 수집이 종료되었습니다. 마지막 측정 구간을 표시합니다.";
-  if (store.system.validity === "stale")
-    return "데이터 갱신이 지연되고 있습니다. 마지막 측정 구간을 표시합니다.";
+  if (store.connection !== "connected") return "연결 대기";
+  if (store.system.error) return "데이터 오류";
+  if (!store.system.readerCaughtUp) return "데이터 불러오는 중";
+  if (store.system.validity === "stale") return "갱신 지연";
   return "";
 });
 </script>
@@ -113,13 +98,20 @@ const notice = computed(() => {
           <span class="motor-id">ID {{ selectedMotor?.id ?? "—" }}</span>
         </div>
         <div class="motor-visual">
-          <img :src="motorImage" alt="모터 외형 참고 이미지" />
+          <MotorModel3D
+            :position="latest?.position ?? null"
+            :origin="origin"
+            :context="shaftContext"
+            :model="selectedMotor?.model ?? 'XM430-W210'"
+            :interval-ms="(store.experiment?.sampleIntervalSec ?? 0.1) * 1000"
+          />
+          <div class="movement" :class="{ muted: !latest }">
+            <component :is="latest?.moving ? RefreshCw : Pause" :size="20" />{{
+              movement
+            }}
+          </div>
         </div>
-        <div class="movement" :class="{ muted: !latest }">
-          <component :is="latest?.moving ? RefreshCw : Pause" :size="20" />{{
-            movement
-          }}
-        </div>
+        <RunControls :show-target="false" />
         <div class="metric-grid">
           <div
             v-for="metric in metrics"
@@ -151,15 +143,6 @@ const notice = computed(() => {
           </div>
           <div>
             <strong>{{ diagnosis.label }}</strong>
-            <p>
-              {{
-                diagnosis.state === "waiting"
-                  ? "알고리즘 결과를 기다리고 있습니다"
-                  : store.mode === "mock"
-                    ? "가상 데이터 · 판정 예시"
-                    : "알고리즘 판정 · 마지막 측정 기준"
-              }}
-            </p>
           </div>
         </div>
         <div class="diagnosis-categories">
@@ -201,6 +184,8 @@ const notice = computed(() => {
         title="전류"
         unit="A"
         :samples="history"
+        :format-time="elapsedTime"
+        :tooltip-time="formatTooltipTime"
         :run-id="store.experiment?.runId"
         :decimals="3"
         :fields="[{ key: 'current', label: '측정값', color: '#bd9aff' }]"
@@ -209,6 +194,8 @@ const notice = computed(() => {
         title="속도"
         unit="rpm"
         :samples="history"
+        :format-time="elapsedTime"
+        :tooltip-time="formatTooltipTime"
         :run-id="store.experiment?.runId"
         :decimals="1"
         :fields="[
@@ -225,6 +212,8 @@ const notice = computed(() => {
         title="위치"
         unit="pulse"
         :samples="history"
+        :format-time="elapsedTime"
+        :tooltip-time="formatTooltipTime"
         :run-id="store.experiment?.runId"
         :decimals="0"
         :fields="[
@@ -246,13 +235,40 @@ const notice = computed(() => {
       />
     </div>
   </div>
-  <div class="data-caption source-path">
-    <span>{{
-      store.mode === "mock"
-        ? "가상 데이터 · 실제 모터와 연결되지 않음"
-        : (store.experiment?.csvPath ??
-          "CSV 연결 대기 · 실험 복사본 실행 후 자동 연결됩니다")
-    }}</span
-    ><span>수신 데이터 기준 표시</span>
-  </div>
 </template>
+
+<style scoped>
+.motor-card {
+  --card-inset: 18px;
+  padding-inline: var(--card-inset);
+  padding-bottom: 0;
+}
+.metric-grid {
+  margin-inline: calc(-1 * var(--card-inset));
+  border-inline: 0;
+  border-bottom: 0;
+  border-radius: 0;
+}
+@media (min-width: 1800px) {
+  .motor-card {
+    --card-inset: 22px;
+  }
+}
+@media (max-width: 640px) {
+  .motor-card {
+    --card-inset: 12px;
+  }
+}
+.motor-visual {
+  min-height: 150px;
+}
+.metric-card {
+  border-bottom: 0;
+}
+.movement {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 0;
+}
+</style>

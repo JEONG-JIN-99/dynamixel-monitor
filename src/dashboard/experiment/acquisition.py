@@ -41,7 +41,11 @@ def to_signed(value, size):
 
 
 class Experiment:
-    def __init__(self, config, config_path=DEFAULT_CONFIG):
+    def __init__(self, config, config_path=DEFAULT_CONFIG, *, run_directory=None, run_id=None, manifest_path=None):
+        self.run_directory = Path(run_directory) if run_directory else None
+        self.run_id = run_id
+        self.manifest_path = manifest_path
+        self.completed_cycles = 0
         self.config = config.validate()
         self.config_path = Path(config_path).resolve()
         self.fields = indirect_fields(config.model)
@@ -262,14 +266,15 @@ class Experiment:
     def run(self):
         code = 0
         error_message = None
-        manifest = RunManifest(self.config)
+        manifest = RunManifest(self.config, path=self.manifest_path, run_id=self.run_id) if self.run_directory else RunManifest(self.config)
         try:
             manifest.begin()
             self.connect()
-            output = self.config.output_dir
+            output = self.run_directory or self.config.output_dir
             output.mkdir(parents=True, exist_ok=True)
             stem = f"{self.config.motor_name}_{self.config.condition_folder}_{datetime.now():%Y%m%d_%H%M%S_%f}"
-            self.csv_path = output / f"{stem}.csv"
+            self.csv_path = output / ("telemetry.csv" if self.run_directory else f"{stem}.csv")
+            metadata_path = output / ("motor_metadata.json" if self.run_directory else f"{stem}.json")
             # 실행 당시 값을 저장하여 나중에 설정 파일을 바꿔도 실험 조건을 추적합니다.
             metadata = {
                 "schema_version": 4, "experiment": "cycle",
@@ -281,14 +286,14 @@ class Experiment:
                              "converted_column": self.config.model.converted_name,
                              "scale": self.config.model.scale},
             }
-            with (output / f"{stem}.json").open("x", encoding="utf-8") as meta_file:
+            with metadata_path.open("x", encoding="utf-8") as meta_file:
                 json.dump(metadata, meta_file, ensure_ascii=False, indent=2)
             with self.csv_path.open("x", newline="", encoding="utf-8-sig") as log_file:
                 writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
                 writer.writeheader()
                 log_file.flush()
                 manifest.update(csvPath=str(self.csv_path.resolve()),
-                                metadataPath=str((output / f"{stem}.json").resolve()))
+                                metadataPath=str(metadata_path.resolve()))
                 target = self.setup_motion()
                 manifest.update(status="running")
                 print(f"CSV: {self.csv_path}")
@@ -297,7 +302,7 @@ class Experiment:
                 print("Type q and Enter to finish after the current full cycle.")
                 threading.Thread(target=self.wait_for_finish, daemon=True).start()
                 cycle = 0
-                while True:
+                while not self.finish_event.is_set() and not (self.run_directory and (self.run_directory / "stop.request").exists()):
                     cycle += 1
                     self.move(writer, log_file, started, cycle, "UP", target)
                     self.dwell(writer, log_file, started, cycle, "TOP_DWELL", target,
@@ -305,6 +310,7 @@ class Experiment:
                     self.move(writer, log_file, started, cycle, "DOWN", self.base_position)
                     self.dwell(writer, log_file, started, cycle, "BOTTOM_DWELL", self.base_position,
                                self.config.bottom_dwell_sec)
+                    self.completed_cycles = cycle
                     if self.finish_event.is_set() or (
                             self.config.max_cycles and cycle >= self.config.max_cycles):
                         break

@@ -2,16 +2,19 @@
 from datetime import datetime, timedelta
 import json
 import math
+import os
 from pathlib import Path
 import sys
 import tempfile
 import threading
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from bootstrap import load_package
+load_package()
 import uvicorn
-from src.dashboard.tests.test_pipeline import setup_source, row, csv_bytes
-from src.dashboard.file_lock import FileLock
-from src.dashboard.main import create_app
+from motor_dashboard.tests.test_pipeline import setup_source, row, csv_bytes
+from motor_dashboard.file_lock import FileLock
+from motor_dashboard.main import create_app
 
 with tempfile.TemporaryDirectory(prefix="motor-dashboard-browser-") as temporary:
     root = Path(temporary)
@@ -44,7 +47,7 @@ with tempfile.TemporaryDirectory(prefix="motor-dashboard-browser-") as temporary
     thread = threading.Thread(target=produce, daemon=True)
     thread.start()
     try:
-        uvicorn.run(create_app(settings), host="127.0.0.1", port=8765, log_level="warning")
+        uvicorn.run(create_app(settings, mock_prehistory_ms=int(os.environ.get("DASHBOARD_TEST_HISTORY_MS", "125000"))), host="127.0.0.1", port=8765, log_level="warning")
     finally:
         stop.set()
         thread.join()

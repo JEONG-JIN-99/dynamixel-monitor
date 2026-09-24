@@ -1,3 +1,4 @@
+import { selectSource } from "./sourceNavigation";
 import { test, expect } from "@playwright/test";
 test("register-only backend payload draws charts and independent diagnosis", async ({
   page,
@@ -52,7 +53,7 @@ test("register-only backend payload draws charts and independent diagnosis", asy
       client.send(JSON.stringify(m));
     });
   });
-  await page.goto("/trends");
+  await page.goto("/trends?source=csv");
   await expect(page.locator(".chart-card")).toHaveCount(8);
   const current = page
     .locator(".chart-card")
@@ -97,7 +98,7 @@ test("pause, resume and source change never retain frozen mock readings", async 
     }),
   );
   await page.goto("/trends?source=mock");
-  await expect(page.locator(".connection-badge")).toContainText("서버 수신");
+  await expect(page.locator(".connection-badge")).toContainText("연결됨");
   await expect.poll(() => frames).toBeGreaterThan(0);
   const beforeFrames = frames;
   await page
@@ -112,7 +113,7 @@ test("pause, resume and source change never retain frozen mock readings", async 
   await page
     .getByRole("button", { name: "화면 일시정지", exact: true })
     .click();
-  await page.getByRole("button", { name: "실험 CSV로 돌아가기" }).click();
+  await selectSource(page, "csv");
   await expect(
     page.getByRole("button", { name: "화면 일시정지", exact: true }),
   ).toHaveAttribute("aria-pressed", "false");

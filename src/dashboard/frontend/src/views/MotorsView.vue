@@ -122,8 +122,7 @@ function rowTime(value: number | null) {
   <div class="motors-page">
     <div class="motors-heading">
       <div>
-        <h2>모터 데이터</h2>
-        <p>주소별 설정값과 측정값을 확인하세요.</p>
+        <h2>모터</h2>
       </div>
       <a
         :href="manualUrl(selectedMotor?.model ?? '')"

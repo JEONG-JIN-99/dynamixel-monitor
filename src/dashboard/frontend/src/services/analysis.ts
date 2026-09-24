@@ -63,6 +63,7 @@ export function analysisPoint(
   const velocityMode = positionMode || mode === 1;
   const point: AnalysisPoint = {
     elapsedMs: input.elapsedMs,
+    timestamp: finite(input.timestamp) ? input.timestamp : null,
     diagnosis: input.diagnosis,
     current: read(126, "current", 0.00269),
     pwm: read(124, "pwm", 0.113),

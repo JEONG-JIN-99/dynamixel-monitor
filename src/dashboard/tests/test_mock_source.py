@@ -2,15 +2,15 @@ import time
 import pytest
 from fastapi.testclient import TestClient
 from fastapi import WebSocketDisconnect
-from src.dashboard.mock_source import MockSource
-from src.dashboard.main import create_app
-from src.dashboard.settings import Settings
+from motor_dashboard.mock_source import MockSource
+from motor_dashboard.main import create_app
+from motor_dashboard.settings import Settings
 
 ADDRESSES = {0,2,6,7,8,9,10,11,12,13,20,24,31,32,34,36,38,44,48,52,60,63,64,65,68,69,70,76,78,80,82,84,88,90,98,100,102,104,108,112,116,120,122,123,124,126,128,132,136,140,144,146,147}
 
 
 def test_raw_only_contract_buffer_and_diagnosis_examples():
-    source = MockSource("server", started_ms=100000)
+    source = MockSource("server", started_ms=100000, prehistory_ms=60000)
     snapshot = source.snapshot()
     assert len(snapshot["history"]) == 601
     assert snapshot["history"][-1]["elapsedMs"] - snapshot["history"][0]["elapsedMs"] == 60000
@@ -30,7 +30,7 @@ def test_raw_only_contract_buffer_and_diagnosis_examples():
 
 
 def test_shared_backend_stream_and_source_isolation(tmp_path):
-    app = create_app(Settings(manifest_path=tmp_path/"none.json", data_root=tmp_path))
+    app = create_app(Settings(manifest_path=tmp_path/"none.json", data_root=tmp_path, mock_data_root=tmp_path/"mock_runs"), mock_prehistory_ms=0)
     with TestClient(app) as client:
         with client.websocket_connect("/ws/telemetry?source=mock") as a:
             first = a.receive_json()

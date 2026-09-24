@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { Cpu, House, ChartNoAxesCombined, Bell, Logs } from "lucide-vue-next";
+import {
+  Cpu,
+  House,
+  SlidersHorizontal,
+  ChartNoAxesCombined,
+  Bell,
+  Logs,
+} from "lucide-vue-next";
 import { useAlertStore } from "../../stores/alertStore";
 const alerts = useAlertStore();
 const links = [
   { path: "/", title: "개요", icon: House },
+  { path: "/control", title: "제어", icon: SlidersHorizontal },
   { path: "/motors", title: "모터", icon: Cpu },
   { path: "/trends", title: "상세 분석", icon: ChartNoAxesCombined },
   { path: "/alerts", title: "알림", icon: Bell },
@@ -19,9 +27,15 @@ const links = [
         :key="link.path"
         :to="{
           path: link.path,
-          query: $route.query.source === 'mock' ? { source: 'mock' } : {},
+          query: ['mock', 'csv'].includes(String($route.query.source))
+            ? { source: $route.query.source }
+            : {},
         }"
-        :class="{ active: $route.path === link.path }"
+        :class="{
+          active:
+            $route.path === link.path ||
+            (link.path === '/logs' && $route.path.startsWith('/logs/')),
+        }"
         :aria-label="link.title"
       >
         <component :is="link.icon" :size="23" /><span>{{ link.title }}</span>

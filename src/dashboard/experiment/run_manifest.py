@@ -17,12 +17,12 @@ DEFAULT_MANIFEST = Path(__file__).resolve().parents[1] / "runtime" / "current_ex
 
 
 class RunManifest:
-    def __init__(self, config, path=DEFAULT_MANIFEST):
+    def __init__(self, config, path=DEFAULT_MANIFEST, run_id=None):
         self.path = Path(path)
         self.lock = FileLock(self.path.with_suffix(".lock"))
         self.active = False
         self.data = {
-            "schemaVersion": 1, "runId": str(uuid4()), "status": "preparing",
+            "schemaVersion": 1, "runId": run_id or str(uuid4()), "status": "preparing",
             "csvPath": None, "metadataPath": None,
             "motorModel": config.motor_name, "motorId": config.motor_id,
             "startedAt": datetime.now().astimezone().isoformat(),

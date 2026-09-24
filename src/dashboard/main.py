@@ -1,4 +1,4 @@
-"""Run the read-only CSV dashboard. This module never imports the motor SDK."""
+"""Dashboard server. Motor SDK access is isolated in an explicitly started worker."""
 import argparse
 import asyncio
 from contextlib import asynccontextmanager
@@ -6,66 +6,66 @@ from pathlib import Path
 import sys
 
 if not __package__:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from src.dashboard.settings import Settings, DEFAULT_CONFIG, ROOT
-    from src.dashboard.source_manager import SourceManager
-    from src.dashboard.stream import TelemetryHub
-    from src.dashboard.routes import register_routes
-    from src.dashboard.mock_source import MockSource
-else:
-    from .settings import Settings, DEFAULT_CONFIG, ROOT
-    from .source_manager import SourceManager
-    from .stream import TelemetryHub
-    from .routes import register_routes
-    from .mock_source import MockSource
+    from bootstrap import load_package
+    __package__ = load_package()
+from .settings import Settings, DEFAULT_CONFIG, ROOT
+from .source_manager import SourceManager
+from .stream import TelemetryHub
+from .routes import register_routes
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse
+from starlette.middleware.gzip import GZipMiddleware
 
 
-def create_app(settings=None, dist=None):
+def create_app(settings=None, dist=None, mock_prehistory_ms=None):
     settings = settings or Settings.load()
     manager = SourceManager(settings)
     hub = TelemetryHub(manager.snapshot(), settings.subscriber_queue_size)
 
-    mock_source = MockSource(hub.snapshot["serverSessionId"])
-    mock_hub = TelemetryHub(mock_source.snapshot(), settings.subscriber_queue_size)
+    idle = manager.snapshot()
+    idle["system"] = {**idle["system"], "sourceMode":"mock"}
+    mock_hub = TelemetryHub(idle, settings.subscriber_queue_size)
 
     @asynccontextmanager
     async def lifespan(app):
         stop = asyncio.Event()
-
+        controller = app.state.controller
+        await controller.open()
         async def watch():
             while not stop.is_set():
                 snapshot, messages = await asyncio.to_thread(manager.tick)
                 hub.publish(snapshot, messages)
                 try:
-                    await asyncio.wait_for(stop.wait(), timeout=settings.poll_interval_sec)
+                    await asyncio.wait_for(stop.wait(), settings.poll_interval_sec)
                 except asyncio.TimeoutError:
                     pass
-
-        async def simulate():
-            loop = asyncio.get_running_loop()
-            started = loop.time()
-            while not stop.is_set():
-                snapshot, messages = mock_source.advance(60000 + round((loop.time() - started) * 1000))
-                mock_hub.publish(snapshot, messages)
-                try:
-                    await asyncio.wait_for(stop.wait(), timeout=mock_source.interval_sec)
-                except asyncio.TimeoutError:
-                    pass
-
-        workers = [asyncio.create_task(watch()), asyncio.create_task(simulate())]
+        worker = asyncio.create_task(watch())
         try:
+            if mock_prehistory_ms is not None:
+                from .experiment.configuration import load_config
+                await asyncio.to_thread(controller.repository.save_config, "mock", load_config().snapshot())
+                await controller.start(controller.repository.saved()["id"], prehistory=mock_prehistory_ms)
+                while app.state.mock_archive is None or not mock_hub.snapshot["latest"]:
+                    if controller.task.done():
+                        raise RuntimeError(controller.current.get("error"))
+                    await asyncio.sleep(.01)
             yield
         finally:
+            await controller.close()
             stop.set()
-            await asyncio.gather(*workers)
+            await worker
 
-    app = FastAPI(title="Motor CSV Dashboard", lifespan=lifespan)
+    app = FastAPI(title="Motor Dashboard", lifespan=lifespan)
+    app.add_middleware(GZipMiddleware, minimum_size=4096, compresslevel=1)
     app.state.hub = hub
     app.state.manager = manager
     app.state.mock_hub = mock_hub
+    app.state.source_manager = manager
+    app.state.mock_archive = None
+    app.state.archive_error = None
+    from .control import ExperimentController
+    app.state.controller = ExperimentController(settings, mock_hub, app)
     register_routes(app, hub, mock_hub)
     dist_path = Path(dist) if dist else ROOT / "frontend" / "dist"
 
@@ -78,7 +78,7 @@ def create_app(settings=None, dist=None):
             raise HTTPException(404)
         if target.is_file():
             return FileResponse(target)
-        if path and path not in {"overview", "motors", "trends", "alerts", "logs", "settings"}:
+        if path and not path.startswith("logs/") and path not in {"overview", "control", "motors", "trends", "alerts", "logs", "settings"}:
             raise HTTPException(404)
         index = dist_path / "index.html"
         if index.exists():
@@ -90,7 +90,7 @@ def create_app(settings=None, dist=None):
 
 if __name__ == "__main__":
     import uvicorn
-    parser = argparse.ArgumentParser(description="Read-only motor CSV dashboard")
+    parser = argparse.ArgumentParser(description="Motor dashboard and experiment control")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     args = parser.parse_args()
     configuration = Settings.load(args.config)

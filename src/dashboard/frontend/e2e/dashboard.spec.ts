@@ -1,39 +1,29 @@
 import { test, expect } from "@playwright/test";
+import { selectSource } from "./sourceNavigation";
 
-test("live CSV, original-time history, reload, mock switch and routes", async ({
+test("default demo has no developer copy and survives navigation and reload", async ({
   page,
 }) => {
   const errors: string[] = [];
+  const sources: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  const samples: number[] = [];
-  page.on("websocket", (socket) =>
-    socket.on("framereceived", ({ payload }) => {
-      const message = JSON.parse(String(payload));
-      if (message.type === "samples") samples.push(message.samples.at(-1).seq);
-    }),
-  );
+  page.on("websocket", (socket) => sources.push(socket.url()));
   await page.goto("/");
-  await expect(page.locator(".source-path")).toContainText("sample.csv");
-  await expect(page.locator(".timing-bar")).toContainText("최근 60초");
-  await expect(page.locator(".connection-badge")).toContainText("시연 CSV");
-  await expect(page.locator(".diagnosis-result")).toContainText("판정 대기");
-  await expect(page.locator(".metric-card")).toHaveCount(6);
-  await expect(page.locator("canvas")).toHaveCount(3);
-  await expect.poll(() => samples.length).toBeGreaterThan(0);
+  await expect(page.locator(".metric-value").first()).not.toContainText("—");
+  await expect(
+    page.locator(
+      ".source-selector, .source-path, .diagnosis-result p, .run-state small",
+    ),
+  ).toHaveCount(0);
+  await expect(page.locator(".app-header")).not.toContainText("가상 데이터");
+  await expect(page.locator(".metric-card")).toHaveCount(3);
+  await page.getByRole("link", { name: "상세 분석", exact: true }).click();
   await page.reload();
-  await expect(page.locator(".timing-bar")).toContainText("최근 60초");
-  await page.getByRole("button", { name: "가상 데이터 보기" }).click();
-  await expect(page.locator(".source-path")).toContainText(
-    "가상 데이터 · 실제 모터와 연결되지 않음",
-  );
-  await page.getByRole("button", { name: "실험 CSV로 돌아가기" }).click();
-  await expect(page.locator(".source-path")).toContainText("sample.csv");
-  await page.getByRole("link", { name: "상세 분석" }).click();
-  await expect(page.locator(".trends-page")).toBeVisible();
-  await page.reload();
-  await expect(page.locator(".trends-page")).toBeVisible();
   await page.getByRole("link", { name: "개요", exact: true }).click();
-  await expect(page.locator(".timing-bar")).toContainText("최근 60초");
+  await expect(page.locator(".metric-value").first()).not.toContainText("—");
+  expect(
+    sources.every((url) => url.endsWith("/ws/telemetry?source=mock")),
+  ).toBe(true);
   await page
     .getByRole("button", { name: "차트 확대", exact: true })
     .first()
@@ -41,6 +31,36 @@ test("live CSV, original-time history, reload, mock switch and routes", async ({
   await expect(page.locator(".chart-card.expanded")).toBeVisible();
   await page.getByRole("button", { name: "차트 축소", exact: true }).click();
   expect(errors).toEqual([]);
+});
+
+test("explicit CSV remains connected across navigation and reload", async ({
+  page,
+}) => {
+  await page.goto("/?source=csv");
+  await expect(page.locator(".diagnosis-result")).toContainText("판정 대기");
+  await expect(page.locator(".connection-badge")).toContainText("수신 중");
+  await page.getByRole("link", { name: "상세 분석", exact: true }).click();
+  await expect(page).toHaveURL(/trends\?source=csv/);
+  await page.reload();
+  await page.getByRole("link", { name: "개요", exact: true }).click();
+  await expect(page).toHaveURL(/source=csv/);
+  await expect(page.locator(".diagnosis-result")).toContainText("판정 대기");
+});
+
+test("changing source while offline clears mock readings", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".metric-value").first()).not.toContainText("—");
+  await context.setOffline(true);
+  try {
+    await selectSource(page, "csv");
+    await expect(page.locator(".metric-value").first()).toContainText("—");
+    await expect(page.locator(".notice")).toHaveText("연결 대기");
+  } finally {
+    await context.setOffline(false);
+  }
 });
 
 for (const size of [
@@ -53,7 +73,7 @@ for (const size of [
     await page.setViewportSize(size);
     await page.goto("/?source=mock");
     await expect(page.locator(".timing-bar")).toContainText("최근 60초");
-    await expect(page.locator("canvas")).toHaveCount(3);
+    await expect(page.locator(".chart canvas")).toHaveCount(3);
     await expect(page.locator(".metric-value").first()).not.toContainText("—");
     // Wait for chart drawing via an animation frame, not an arbitrary long delay.
     await page.evaluate(
@@ -70,14 +90,11 @@ for (const size of [
     await expect(page.locator(".timing-bar > div").first()).toContainText(
       "데이터 수집 주기",
     );
-    await expect(page.locator(".motor-visual img")).toBeVisible();
-    expect(
-      await page
-        .locator(".motor-visual img")
-        .evaluate(
-          (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
-        ),
-    ).toBe(true);
+    await expect(page.locator(".motor-model")).toHaveAttribute(
+      "data-ready",
+      "true",
+    );
+    await expect(page.locator(".motor-model canvas")).toBeVisible();
     if (size.width > 1000) {
       const grid = await page.locator(".overview-grid").boundingBox();
       const diagnosis = await page.locator(".diagnosis-card").boundingBox();
@@ -96,77 +113,6 @@ for (const size of [
   });
 }
 
-test("direct Mock entry: repeated CSV clicks, back and reload stay on CSV", async ({
-  page,
-}) => {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/?source=mock");
-  await expect(page.locator(".source-path")).toContainText(
-    "가상 데이터 · 실제 모터와 연결되지 않음",
-  );
-  await page.getByRole("button", { name: "실험 CSV로 돌아가기" }).dblclick();
-  await expect(page.locator(".source-path")).toContainText("sample.csv");
-  await expect(page).toHaveURL("http://127.0.0.1:8765/");
-  await expect(
-    page.getByRole("button", { name: "실험 CSV로 돌아가기" }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("link", { name: "상세 분석" }).click();
-  await page.goBack();
-  await expect(page).toHaveURL("http://127.0.0.1:8765/");
-  await expect(page.locator(".source-path")).toContainText("sample.csv");
-  await page.reload();
-  await expect(page.locator(".source-path")).toContainText("sample.csv");
-  await expect(page).not.toHaveURL(/source=mock/);
-  expect(errors).toEqual([]);
-});
-
-test("Mock selection stays consistent through menu navigation and browser history", async ({
-  page,
-}) => {
-  await page.goto("/?source=mock");
-  await page.getByRole("link", { name: "상세 분석" }).click();
-  await expect(page).toHaveURL(/trends\?source=mock/);
-  await page.reload();
-  await expect(
-    page.getByRole("button", { name: "가상 데이터 보기" }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("link", { name: "개요", exact: true }).click();
-  await expect(page.locator(".source-path")).toContainText(
-    "가상 데이터 · 실제 모터와 연결되지 않음",
-  );
-  await page.getByRole("button", { name: "실험 CSV로 돌아가기" }).click();
-  await expect(page.locator(".source-path")).toContainText("sample.csv");
-  await page.goBack();
-  await expect(page).toHaveURL(/trends\?source=mock/);
-  await expect(
-    page.getByRole("button", { name: "가상 데이터 보기" }),
-  ).toHaveAttribute("aria-pressed", "true");
-});
-
-test("CSV selection clears Mock values even when the server cannot be reached", async ({
-  page,
-  context,
-}) => {
-  await page.goto("/?source=mock");
-  await expect(page.locator(".source-path")).toContainText(
-    "가상 데이터 · 실제 모터와 연결되지 않음",
-  );
-  await context.setOffline(true);
-  try {
-    await page.getByRole("button", { name: "실험 CSV로 돌아가기" }).click();
-    await expect(page.locator(".source-path")).toContainText("CSV 연결 대기");
-    await expect(page.locator(".timing-bar")).toContainText(
-      "데이터 수집 주기 —",
-    );
-    await expect(page.locator(".metric-value").first()).toContainText("—");
-    await expect(page).not.toHaveURL(/source=mock/);
-    await expect(page.locator(".notice").first()).toBeVisible();
-  } finally {
-    await context.setOffline(false);
-  }
-});
-
 test("velocity legend hides plotted lines and preserves selection across updates", async ({
   page,
 }) => {
@@ -176,8 +122,8 @@ test("velocity legend hides plotted lines and preserves selection across updates
       if (JSON.parse(String(payload)).type === "samples") batches++;
     }),
   );
-  await page.goto("/");
-  await expect(page.locator(".source-path")).toContainText("sample.csv");
+  await page.goto("/?source=csv");
+  await expect(page.locator(".connection-badge")).toContainText("수신 중");
   const panel = page.locator(".chart-card").filter({
     has: page.getByRole("heading", { name: "속도", exact: true }),
   });
@@ -262,13 +208,13 @@ test("selected motor drives readings, charts and independent algorithm diagnosis
       client.send(JSON.stringify(message));
     });
   });
-  await page.goto("/");
-  await expect(page.locator(".metric-value").first()).toContainText("111");
+  await page.goto("/?source=csv");
+  await expect(page.locator(".chart-current").last()).toContainText("111");
   await expect(page.locator(".diagnosis-result")).toContainText("판정 대기");
   await page
     .getByRole("combobox", { name: "모터종류" })
     .selectOption("XM430-W350:2");
-  await expect(page.locator(".metric-value").first()).toContainText("222");
+  await expect(page.locator(".chart-current").last()).toContainText("222");
   await expect(page.locator(".chart-current").first()).toContainText("0.222");
   await expect(page.locator(".diagnosis-result")).toContainText(
     "과부하 · 마찰",
@@ -291,7 +237,7 @@ test("selected motor drives readings, charts and independent algorithm diagnosis
       })),
     }),
   );
-  await expect(page.locator(".metric-value").first()).toContainText("225");
+  await expect(page.locator(".chart-current").last()).toContainText("225");
   await expect(page.locator(".diagnosis-result")).toContainText("정상");
   await expect(page.locator(".diagnosis-chip.detected")).toHaveCount(0);
 });
@@ -319,20 +265,18 @@ test("mock updates come from backend frames and stop when its socket closes", as
     };
   });
   await page.goto("/?source=mock");
-  await expect(page.locator(".connection-badge")).toContainText("서버 수신");
+  await expect(page.locator(".connection-badge")).toContainText("연결됨");
   await expect.poll(() => frames).toBeGreaterThan(2);
-  const before = await page.locator(".metric-value").first().textContent();
-  await expect(page.locator(".metric-value").first()).not.toHaveText(before!);
+  const before = await page.locator(".chart-current").last().textContent();
+  await expect(page.locator(".chart-current").last()).not.toHaveText(before!);
   disconnect!();
   await expect(page.locator(".connection-badge")).toContainText("연결 대기");
   // Let the final queued screen update settle, then prove no local generator runs.
   await page.waitForTimeout(150);
-  const stopped = await page.locator(".metric-grid").textContent();
+  const stopped = await page.locator(".chart-current").last().textContent();
   await page.waitForTimeout(600);
-  await expect(page.locator(".metric-grid")).toHaveText(stopped!);
-  await expect(page.locator(".notice")).toContainText(
-    "가상 데이터 서버 연결 대기",
-  );
+  await expect(page.locator(".chart-current").last()).toHaveText(stopped!);
+  await expect(page.locator(".notice")).toContainText("연결 대기");
 });
 
 test("backend raw-only contract renders overview, 53-register table and derived analysis", async ({
@@ -363,10 +307,10 @@ test("backend raw-only contract renders overview, 53-register table and derived 
       maximumFractionDigits: digits,
     });
   await expect(page.locator(".metric-value").first()).toContainText(
-    f(sample.registers[132].raw),
+    f(sample.registers[146].raw),
   );
-  await expect(page.locator(".metric-value").nth(2)).toContainText(
-    f(sample.registers[126].raw * 0.00269, 3),
+  await expect(page.locator(".metric-value").nth(1)).toContainText(
+    f(sample.registers[144].raw * 0.1, 1),
   );
   await page.getByRole("link", { name: "모터", exact: true }).click();
   await expect(page.locator(".provided-count")).toHaveText("값 제공 53 / 53개");
@@ -374,11 +318,9 @@ test("backend raw-only contract renders overview, 53-register table and derived 
     f(sample.registers[126].raw),
   );
   await page.getByRole("link", { name: "상세 분석", exact: true }).click();
-  const error = page
-    .locator(".chart-card")
-    .filter({
-      has: page.getByRole("heading", { name: "위치 추종 오차", exact: true }),
-    });
+  const error = page.locator(".chart-card").filter({
+    has: page.getByRole("heading", { name: "위치 추종 오차", exact: true }),
+  });
   await expect(error.locator(".chart-current strong")).toHaveText(
     f(sample.registers[132].raw - sample.registers[140].raw),
   );

@@ -54,7 +54,7 @@ class SourceManager:
         for key in ("csvPath", "metadataPath"):
             if value.get(key):
                 path = Path(value[key])
-                if not path.is_absolute() or not path.resolve().is_relative_to(self.settings.data_root.resolve()):
+                if not path.is_absolute() or not any(path.resolve().is_relative_to(root.resolve()) for root in (self.settings.data_root, self.settings.experiment_data_root)):
                     raise ValueError(f"{key} must be inside configured data_root")
         return value
 

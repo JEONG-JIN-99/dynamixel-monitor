@@ -1,3 +1,4 @@
+import { dashboardPython } from "./playwright.python";
 import { defineConfig } from "@playwright/test";
 import path from "node:path";
 export default defineConfig({
@@ -11,10 +12,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: {
-    command:
-      process.platform === "win32"
-        ? `"${path.resolve("../../../.venv/Scripts/python.exe")}" "${path.resolve("../tests/browser_server.py")}"`
-        : "../../../.venv/bin/python ../tests/browser_server.py",
+    command: `"${dashboardPython()}" "${path.resolve("../tests/browser_server.py")}"`,
     url: "http://127.0.0.1:8765/api/health",
     reuseExistingServer: false,
     timeout: 20000,

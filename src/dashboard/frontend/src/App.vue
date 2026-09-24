@@ -4,10 +4,15 @@ import { useRoute } from "vue-router";
 import AppHeader from "./components/layout/AppHeader.vue";
 import AppSidebar from "./components/layout/AppSidebar.vue";
 import { useMotorStore } from "./stores/motorStore";
+import { useControlStore } from "./stores/controlStore";
+import "./styles/control.css";
+const control = useControlStore();
+control.start();
+onUnmounted(control.stop);
 const store = useMotorStore();
 const route = useRoute();
 watch(
-  () => (route.query.source === "mock" ? "mock" : "csv"),
+  () => (route.query.source === "csv" ? "csv" : "mock"),
   (source) => store.start(source),
   { immediate: true },
 );

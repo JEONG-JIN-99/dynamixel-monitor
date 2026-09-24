@@ -92,7 +92,8 @@ describe("diagnosis alert episodes", () => {
   });
   it("preserves read flags and checkpoints over restoration and snapshot replay", () => {
     const j = emptyJournal();
-    ingestAlerts(j, "csv", [sample(1), sample(2)], true);
+    ingestAlerts(j, "csv", [sample(1), sample(2)]);
+    j.records[0]!.read = true;
     const restored = restoreJournal(JSON.stringify(j));
     ingestAlerts(restored, "csv", [sample(1), sample(2), sample(3)]);
     expect(restored.records).toHaveLength(1);

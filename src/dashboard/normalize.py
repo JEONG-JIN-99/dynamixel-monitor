@@ -52,6 +52,7 @@ def normalize(row, manifest, metadata, seq, server_session, source_session):
         "velocityTrajectory": raw("Velocity Trajectory") * 0.229,
         "positionTrajectory": raw("Position Trajectory"), "goalPosition": goal,
         "goalSource": "command" if goal is not None else None,
+        "basePosition": raw("Base Position") if row.get("Base Position", "") != "" else None,
         "voltage": number("Present Input Voltage", True, 0, 65535) * 0.1,
         "temperature": byte("Present Temperature"),
         "timestamp": timestamp, "pcTime": row["PC Time"], "elapsedMs": elapsed,

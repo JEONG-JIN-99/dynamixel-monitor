@@ -13,6 +13,7 @@ export interface RegisterReading {
   error?: string;
 }
 export interface Sample {
+  basePosition?: number | null;
   registers?: Record<string, RegisterReading>;
   diagnosis?: DiagnosisResult | null;
   serverSessionId: string;
@@ -108,6 +109,7 @@ export type RegisterSample = Pick<
   | "diagnosis"
 > & {
   timestamp: number;
+  basePosition?: number | null;
   registers: Record<string, RegisterReading>;
 };
 export interface Snapshot<T = Sample> {

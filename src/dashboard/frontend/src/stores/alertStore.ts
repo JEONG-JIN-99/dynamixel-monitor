@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import type { Sample, SourceMode } from "../types/motor";
 import {
   ALERT_STORAGE_KEY,
+  MOCK_ALERT_STORAGE_KEY,
+  alertContext,
   alertSession,
   emptyJournal,
   ingestAlerts,
@@ -11,20 +13,19 @@ import {
 
 export const useAlertStore = defineStore("alerts", () => {
   const storageWarning = ref("");
-  function load() {
+  function load(key: string) {
     try {
-      return restoreJournal(localStorage.getItem(ALERT_STORAGE_KEY));
+      return restoreJournal(localStorage.getItem(key));
     } catch {
       storageWarning.value =
         "저장된 알림을 불러오지 못했습니다. 새 알림은 계속 표시합니다.";
       return emptyJournal();
     }
   }
-  const journal = shallowRef(load());
-  const demo = shallowRef(emptyJournal());
+  const journal = shallowRef(load(ALERT_STORAGE_KEY));
+  const demo = shallowRef(load(MOCK_ALERT_STORAGE_KEY));
   const source = ref<SourceMode>("csv");
   const session = ref<string | null>(null);
-  const viewing = ref(false);
   const current = computed(() =>
     source.value === "mock" ? demo.value : journal.value,
   );
@@ -34,11 +35,18 @@ export const useAlertStore = defineStore("alerts", () => {
   );
   let timer: ReturnType<typeof setTimeout> | undefined;
 
+  const pending = new Set<SourceMode>();
   function persist() {
     clearTimeout(timer);
     timer = undefined;
     try {
-      localStorage.setItem(ALERT_STORAGE_KEY, JSON.stringify(journal.value));
+      for (const mode of pending) {
+        localStorage.setItem(
+          mode === "mock" ? MOCK_ALERT_STORAGE_KEY : ALERT_STORAGE_KEY,
+          JSON.stringify(mode === "mock" ? demo.value : journal.value),
+        );
+      }
+      pending.clear();
       storageWarning.value = "";
     } catch {
       storageWarning.value =
@@ -48,28 +56,20 @@ export const useAlertStore = defineStore("alerts", () => {
   function changed(immediate = false) {
     const target = source.value === "mock" ? demo : journal;
     target.value = { ...target.value, records: [...target.value.records] };
-    if (source.value === "mock") return;
+    pending.add(source.value);
     if (immediate) persist();
     else if (!timer) timer = setTimeout(persist, 500);
   }
-  function markAllRead() {
-    let dirty = false;
-    for (const r of records.value)
-      if (!r.read) {
-        r.read = true;
-        dirty = true;
-      }
-    if (dirty) changed(true);
-  }
-  function setViewing(visible: boolean) {
-    viewing.value = visible;
-    if (visible) markAllRead();
+  function markRead(id: string) {
+    const record = records.value.find((r) => r.id === id);
+    if (!record || record.read) return;
+    record.read = true;
+    record.readAt = Date.now();
+    changed(true);
   }
   function start(mode: SourceMode) {
     source.value = mode;
     session.value = null;
-    if (mode === "mock") demo.value = emptyJournal();
-    if (viewing.value) markAllRead();
   }
   function beginSession(
     server: string,
@@ -78,9 +78,24 @@ export const useAlertStore = defineStore("alerts", () => {
   ) {
     session.value = alertSession(source.value, server, stream, run);
   }
-  function ingest(samples: Sample[]) {
-    if (ingestAlerts(current.value, source.value, samples, viewing.value))
-      changed();
+  function ingest(
+    samples: Sample[],
+    options: { snapshot?: boolean; active?: boolean } = {},
+  ) {
+    const active = options.active ?? true;
+    const latest = new Map<string, number>();
+    if (options.snapshot && active) {
+      for (const sample of samples) {
+        const key = alertContext(source.value, sample);
+        latest.set(key, Math.max(latest.get(key) ?? -1, sample.seq));
+      }
+    }
+    const notify = options.snapshot
+      ? (sample: Sample) =>
+          active &&
+          latest.get(alertContext(source.value, sample)) === sample.seq
+      : active;
+    if (ingestAlerts(current.value, source.value, samples, notify)) changed();
   }
   if (typeof window !== "undefined") {
     window.addEventListener("pagehide", () => {
@@ -100,7 +115,6 @@ export const useAlertStore = defineStore("alerts", () => {
     start,
     beginSession,
     ingest,
-    setViewing,
-    markAllRead,
+    markRead,
   };
 });

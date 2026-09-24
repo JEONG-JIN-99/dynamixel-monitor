@@ -21,7 +21,7 @@ export type PlotKey =
   | "temperature"
   | "positionError"
   | "velocityError";
-export type PlotPoint = { elapsedMs: number } & Partial<
+export type PlotPoint = { elapsedMs: number; timestamp?: number | null } & Partial<
   Record<PlotKey, number | null>
 >;
 export interface PlotField {

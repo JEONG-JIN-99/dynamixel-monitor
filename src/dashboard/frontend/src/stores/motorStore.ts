@@ -29,13 +29,24 @@ export const useMotorStore = defineStore("motor", () => {
   let capacity = 12000;
   let close: (() => void) | undefined;
   let generation = 0;
+  const sampleListeners = new Set<
+    (samples: Sample[], reset: boolean) => void
+  >();
+  function subscribeSamples(
+    listener: (samples: Sample[], reset: boolean) => void,
+  ) {
+    sampleListeners.add(listener);
+    return () => {
+      sampleListeners.delete(listener);
+    };
+  }
   const latest = computed(() => history.value.at(-1) ?? null);
   const live = computed(
     () =>
       mode.value === "csv" &&
       connection.value === "connected" &&
       system.value.validity === "valid" &&
-      system.value.experimentStatus === "running" &&
+      ["running", "finishing"].includes(system.value.experimentStatus) &&
       system.value.readerCaughtUp &&
       system.value.writerActive === true,
   );
@@ -81,7 +92,9 @@ export const useMotorStore = defineStore("motor", () => {
             sample.sourceSessionId === message.sourceSessionId &&
             sample.runId === message.runId,
         ),
+        { snapshot: true, active: ["running", "finishing"].includes(message.system.experimentStatus) && message.system.validity === "valid" && message.system.readerCaughtUp },
       );
+      sampleListeners.forEach((listener) => listener(message.history, true));
       return;
     }
     if (
@@ -102,7 +115,8 @@ export const useMotorStore = defineStore("motor", () => {
         retentionSec.value,
         capacity,
       );
-      alerts.ingest(samples);
+      alerts.ingest(samples, {active: ["running", "finishing"].includes(system.value.experimentStatus) && system.value.readerCaughtUp});
+      sampleListeners.forEach((listener) => listener(samples, false));
     } else if (message.type === "system") {
       system.value = message.system;
       experiment.value = message.experiment;
@@ -157,8 +171,11 @@ export const useMotorStore = defineStore("motor", () => {
     system,
     live,
     retentionSec,
+    serverSession,
+    sourceSession,
     start,
     stop,
     accept,
+    subscribeSamples,
   };
 });

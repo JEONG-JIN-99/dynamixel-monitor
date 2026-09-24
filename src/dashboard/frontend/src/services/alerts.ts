@@ -3,6 +3,8 @@ import type { AlertJournal, DiagnosisAlert } from "../types/alerts";
 import { diagnosisLabels } from "./overview";
 
 export const ALERT_STORAGE_KEY = "motor-dashboard.diagnosis-alerts.v1";
+export const MOCK_ALERT_STORAGE_KEY =
+  "motor-dashboard.mock-diagnosis-alerts.v1";
 export const emptyJournal = (): AlertJournal => ({
   version: 1,
   records: [],
@@ -44,7 +46,7 @@ export function ingestAlerts(
   journal: AlertJournal,
   source: SourceMode,
   samples: Sample[],
-  read = false,
+  notifyNew: boolean | ((sample: Sample) => boolean) = true,
 ): boolean {
   let changed = false;
   for (const sample of [...samples].sort((a, b) => a.seq - b.seq)) {
@@ -93,6 +95,8 @@ export function ingestAlerts(
     }
     for (const code of codes) {
       if (open.some((r) => r.code === code)) continue;
+      if (!(typeof notifyNew === "function" ? notifyNew(sample) : notifyNew))
+        continue;
       journal.records.push({
         id: JSON.stringify([context, sample.seq, code]),
         context,
@@ -105,7 +109,8 @@ export function ingestAlerts(
         startedAt: at,
         lastSeenAt: at,
         resolvedAt: null,
-        read,
+        read: false,
+        readAt: null,
       });
     }
   }
@@ -146,7 +151,8 @@ export function restoreJournal(raw: string | null): AlertJournal {
       !["csv", "mock"].includes(r.source) ||
       ![r.motorId, r.startedAt, r.lastSeenAt].every(finite) ||
       !(r.resolvedAt === null || finite(r.resolvedAt)) ||
-      typeof r.read !== "boolean"
+      typeof r.read !== "boolean" ||
+      !(r.readAt == null || finite(r.readAt))
     )
       throw new Error("Invalid alert record");
     const context = JSON.parse(r.context);

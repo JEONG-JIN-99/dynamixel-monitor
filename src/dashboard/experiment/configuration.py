@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 import tomllib
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = Path(__file__).resolve().parents[1] / "config" / "experiment.toml"
 
 
@@ -64,7 +64,7 @@ class ExperimentConfig:
 
     @property
     def output_dir(self):
-        return PROJECT_ROOT / "results" / "raw" / self.motor_name / self.condition_folder
+        return PROJECT_ROOT / "runtime" / "standalone_runs" / self.motor_name / self.condition_folder
 
     @property
     def condition_folder(self):

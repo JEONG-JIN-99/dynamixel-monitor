@@ -13,16 +13,16 @@ from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
-from src.dashboard.buffer import SampleBuffer
-from src.dashboard.csv_reader import CsvTail
-from src.dashboard.file_lock import FileLock, is_locked
-from src.dashboard.main import create_app
-from src.dashboard.normalize import normalize
-from src.dashboard.settings import Settings
-from src.dashboard.source_manager import SourceManager
-from src.dashboard.stream import TelemetryHub
-from src.dashboard.experiment.configuration import load_config, PROJECT_ROOT
-from src.dashboard.experiment.run_manifest import RunManifest
+from motor_dashboard.buffer import SampleBuffer
+from motor_dashboard.csv_reader import CsvTail
+from motor_dashboard.file_lock import FileLock, is_locked
+from motor_dashboard.main import create_app
+from motor_dashboard.normalize import normalize
+from motor_dashboard.settings import Settings
+from motor_dashboard.source_manager import SourceManager
+from motor_dashboard.stream import TelemetryHub
+from motor_dashboard.experiment.configuration import load_config, PROJECT_ROOT
+from motor_dashboard.experiment.run_manifest import RunManifest
 
 
 def row(t=0, **changes):
@@ -60,7 +60,7 @@ def setup_source(tmp_path, rows=None, status="completed"):
                 "startedAt": "2026-09-22T12:00:00+09:00", "error": None}
     manifest_path = tmp_path / "current_experiment.json"
     manifest_path.write_text(json.dumps(manifest))
-    settings = Settings(manifest_path=manifest_path, data_root=tmp_path, poll_interval_sec=0.02)
+    settings = Settings(manifest_path=manifest_path, data_root=tmp_path, mock_data_root=tmp_path / "mock_runs", poll_interval_sec=0.02)
     return settings, manifest, path
 
 
@@ -212,7 +212,7 @@ def test_stale_running_manifest_not_live_even_after_reboot(tmp_path):
 
 
 def test_waiting_partial_final_and_invalid_manifest(tmp_path):
-    settings = Settings(manifest_path=tmp_path / "missing.json", data_root=tmp_path)
+    settings = Settings(manifest_path=tmp_path / "missing.json", data_root=tmp_path, mock_data_root=tmp_path / "mock_runs")
     manager = SourceManager(settings)
     assert manager.tick()[0]["system"]["validity"] == "waiting"
     settings.manifest_path.write_text("[]")
@@ -249,7 +249,7 @@ def test_manifest_replace_failure_is_bounded_and_preserves_previous(tmp_path):
     manifest.begin()
     original = manifest.path.read_text()
     try:
-        with patch("src.dashboard.experiment.run_manifest.os.replace", side_effect=PermissionError("busy")) as rename:
+        with patch("motor_dashboard.experiment.run_manifest.os.replace", side_effect=PermissionError("busy")) as rename:
             assert manifest.update(status="running") is False
             assert rename.call_count == 3
         assert manifest.path.read_text() == original
@@ -291,7 +291,7 @@ def test_websocket_snapshot_live_and_slow_client_reset(tmp_path):
 
 
 def test_static_routes_and_server_does_not_import_sdk(tmp_path):
-    settings = Settings(manifest_path=tmp_path / "missing.json", data_root=tmp_path)
+    settings = Settings(manifest_path=tmp_path / "missing.json", data_root=tmp_path, mock_data_root=tmp_path / "mock_runs")
     dist = tmp_path / "dist"
     dist.mkdir()
     (dist / "index.html").write_text("<h1>dashboard</h1>")
@@ -299,7 +299,7 @@ def test_static_routes_and_server_does_not_import_sdk(tmp_path):
         assert client.get("/").status_code == 200
         assert client.get("/trends").status_code == 200
         assert client.get("/api/nope").status_code == 404
-    code = "import sys; from src.dashboard.main import create_app; create_app(); assert 'dynamixel_sdk' not in sys.modules"
+    code = "import sys; from bootstrap import load_package; load_package(); from motor_dashboard.main import create_app; create_app(); assert 'dynamixel_sdk' not in sys.modules"
     subprocess.run([sys.executable, "-c", code], cwd=PROJECT_ROOT, check=True)
 
 def test_truncate_regrow_past_offset_detects_changed_anchor(tmp_path):

@@ -1,0 +1,2853 @@
+{
+  "snapshot": {
+    "schemaVersion": 1,
+    "serverSessionId": "example-server",
+    "sourceSessionId": "example-run:1",
+    "type": "snapshot",
+    "runId": "example-run",
+    "latest": {
+      "serverSessionId": "example-server",
+      "sourceSessionId": "example-run:1",
+      "runId": "example-run",
+      "busId": "mock",
+      "seq": 1,
+      "id": 1,
+      "model": "XM430-W210",
+      "elapsedMs": 0,
+      "timestamp": 1790000000000,
+      "receivedAt": 1790000000000,
+      "basePosition": 100,
+      "registers": {
+        "0": {
+          "raw": 1030,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "2": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "6": {
+          "raw": 45,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "7": {
+          "raw": 1,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "8": {
+          "raw": 1,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "9": {
+          "raw": 250,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "10": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "11": {
+          "raw": 4,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "12": {
+          "raw": 255,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "13": {
+          "raw": 2,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "20": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "24": {
+          "raw": 10,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "31": {
+          "raw": 80,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "32": {
+          "raw": 160,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "34": {
+          "raw": 95,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "36": {
+          "raw": 885,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "38": {
+          "raw": 1193,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "44": {
+          "raw": 330,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "48": {
+          "raw": 4095,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "52": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "60": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "63": {
+          "raw": 52,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "64": {
+          "raw": 1,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "65": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "68": {
+          "raw": 2,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "69": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "70": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "76": {
+          "raw": 1920,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "78": {
+          "raw": 100,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "80": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "82": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "84": {
+          "raw": 800,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "88": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "90": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "98": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "100": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "102": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "104": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "108": {
+          "raw": 10,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "112": {
+          "raw": 65,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "116": {
+          "raw": 4196,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "120": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "122": {
+          "raw": 1,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "123": {
+          "raw": 2,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "124": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "126": {
+          "raw": 108,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "128": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "132": {
+          "raw": 100,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "136": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "140": {
+          "raw": 100,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "144": {
+          "raw": 120,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "146": {
+          "raw": 34,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        },
+        "147": {
+          "raw": 0,
+          "receivedAt": 1790000000000,
+          "status": "received"
+        }
+      },
+      "diagnosis": {
+        "state": "normal",
+        "codes": []
+      }
+    },
+    "history": [
+      {
+        "serverSessionId": "example-server",
+        "sourceSessionId": "example-run:1",
+        "runId": "example-run",
+        "busId": "mock",
+        "seq": 1,
+        "id": 1,
+        "model": "XM430-W210",
+        "elapsedMs": 0,
+        "timestamp": 1790000000000,
+        "receivedAt": 1790000000000,
+        "basePosition": 100,
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "64": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "65": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "68": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "69": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "70": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "76": {
+            "raw": 1920,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "78": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "80": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "82": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "84": {
+            "raw": 800,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "88": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "90": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "98": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "100": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "102": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "104": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "108": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "112": {
+            "raw": 65,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "116": {
+            "raw": 4196,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "120": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "122": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "123": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "124": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "126": {
+            "raw": 108,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "128": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "132": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "136": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "140": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "144": {
+            "raw": 120,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "146": {
+            "raw": 34,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "147": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          }
+        },
+        "diagnosis": {
+          "state": "normal",
+          "codes": []
+        }
+      }
+    ],
+    "retentionSec": 60,
+    "capacity": 601,
+    "seq": 1,
+    "experiment": {
+      "runId": "example-run",
+      "status": "running",
+      "csvPath": null,
+      "metadataPath": null,
+      "motorModel": "XM430-W210",
+      "motorId": 1,
+      "sampleIntervalSec": 0.1,
+      "flushEveryRows": 1,
+      "startedAt": "2026-09-21T14:13:20+00:00",
+      "endedAt": null,
+      "error": null
+    },
+    "metadata": [
+      {
+        "id": 1,
+        "model": "XM430-W210",
+        "modelNumber": 1030,
+        "firmware": 45,
+        "simulated": true,
+        "source": "backend-mock",
+        "settings": {},
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          }
+        },
+        "limits": {
+          "current": null,
+          "temperature": null,
+          "voltageMin": null,
+          "voltageMax": null
+        }
+      }
+    ],
+    "events": [
+      {
+        "id": "example-run",
+        "time": "2026-09-21T14:13:20+00:00",
+        "severity": "info",
+        "message": "백엔드 가상 데이터 · 진단 결과는 시나리오 예시입니다."
+      }
+    ],
+    "system": {
+      "sourceMode": "mock",
+      "validity": "valid",
+      "experimentStatus": "running",
+      "dataAgeSec": 0,
+      "configuredHz": 10.0,
+      "observedHz": 10.0,
+      "expectedFlushSec": null,
+      "error": null,
+      "readerCaughtUp": true,
+      "writerActive": true
+    }
+  },
+  "samples": {
+    "schemaVersion": 1,
+    "serverSessionId": "example-server",
+    "sourceSessionId": "example-run:1",
+    "type": "samples",
+    "samples": [
+      {
+        "serverSessionId": "example-server",
+        "sourceSessionId": "example-run:1",
+        "runId": "example-run",
+        "busId": "mock",
+        "seq": 2,
+        "id": 1,
+        "model": "XM430-W210",
+        "elapsedMs": 100,
+        "timestamp": 1790000000100,
+        "receivedAt": 1790000000100,
+        "basePosition": 100,
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "64": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "65": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "68": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "69": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "70": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "76": {
+            "raw": 1920,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "78": {
+            "raw": 100,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "80": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "82": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "84": {
+            "raw": 800,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "88": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "90": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "98": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "100": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "102": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "104": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "108": {
+            "raw": 10,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "112": {
+            "raw": 65,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "116": {
+            "raw": 4196,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "120": {
+            "raw": 100,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "122": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "123": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "124": {
+            "raw": 8,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "126": {
+            "raw": 122,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "128": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "132": {
+            "raw": 105,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "136": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "140": {
+            "raw": 103,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "144": {
+            "raw": 120,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "146": {
+            "raw": 34,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "147": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          }
+        },
+        "diagnosis": {
+          "state": "normal",
+          "codes": []
+        }
+      }
+    ]
+  },
+  "system": {
+    "schemaVersion": 1,
+    "serverSessionId": "example-server",
+    "sourceSessionId": "example-run:1",
+    "type": "system",
+    "system": {
+      "sourceMode": "mock",
+      "validity": "valid",
+      "experimentStatus": "running",
+      "dataAgeSec": 0,
+      "configuredHz": 10.0,
+      "observedHz": 10.0,
+      "expectedFlushSec": null,
+      "error": null,
+      "readerCaughtUp": true,
+      "writerActive": true
+    },
+    "experiment": {
+      "runId": "example-run",
+      "status": "running",
+      "csvPath": null,
+      "metadataPath": null,
+      "motorModel": "XM430-W210",
+      "motorId": 1,
+      "sampleIntervalSec": 0.1,
+      "flushEveryRows": 1,
+      "startedAt": "2026-09-21T14:13:20+00:00",
+      "endedAt": null,
+      "error": null
+    },
+    "metadata": [
+      {
+        "id": 1,
+        "model": "XM430-W210",
+        "modelNumber": 1030,
+        "firmware": 45,
+        "simulated": true,
+        "source": "backend-mock",
+        "settings": {},
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          }
+        },
+        "limits": {
+          "current": null,
+          "temperature": null,
+          "voltageMin": null,
+          "voltageMax": null
+        }
+      }
+    ]
+  },
+  "reset": {
+    "schemaVersion": 1,
+    "serverSessionId": "example-server",
+    "sourceSessionId": "example-run:1",
+    "type": "reset",
+    "runId": "example-run",
+    "latest": {
+      "serverSessionId": "example-server",
+      "sourceSessionId": "example-run:1",
+      "runId": "example-run",
+      "busId": "mock",
+      "seq": 2,
+      "id": 1,
+      "model": "XM430-W210",
+      "elapsedMs": 100,
+      "timestamp": 1790000000100,
+      "receivedAt": 1790000000100,
+      "basePosition": 100,
+      "registers": {
+        "0": {
+          "raw": 1030,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "2": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "6": {
+          "raw": 45,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "7": {
+          "raw": 1,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "8": {
+          "raw": 1,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "9": {
+          "raw": 250,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "10": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "11": {
+          "raw": 4,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "12": {
+          "raw": 255,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "13": {
+          "raw": 2,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "20": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "24": {
+          "raw": 10,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "31": {
+          "raw": 80,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "32": {
+          "raw": 160,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "34": {
+          "raw": 95,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "36": {
+          "raw": 885,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "38": {
+          "raw": 1193,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "44": {
+          "raw": 330,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "48": {
+          "raw": 4095,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "52": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "60": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "63": {
+          "raw": 52,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "64": {
+          "raw": 1,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "65": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "68": {
+          "raw": 2,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "69": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "70": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "76": {
+          "raw": 1920,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "78": {
+          "raw": 100,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "80": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "82": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "84": {
+          "raw": 800,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "88": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "90": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "98": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "100": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "102": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "104": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "108": {
+          "raw": 10,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "112": {
+          "raw": 65,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "116": {
+          "raw": 4196,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "120": {
+          "raw": 100,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "122": {
+          "raw": 1,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "123": {
+          "raw": 2,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "124": {
+          "raw": 8,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "126": {
+          "raw": 122,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "128": {
+          "raw": 2,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "132": {
+          "raw": 105,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "136": {
+          "raw": 2,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "140": {
+          "raw": 103,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "144": {
+          "raw": 120,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "146": {
+          "raw": 34,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        },
+        "147": {
+          "raw": 0,
+          "receivedAt": 1790000000100,
+          "status": "received"
+        }
+      },
+      "diagnosis": {
+        "state": "normal",
+        "codes": []
+      }
+    },
+    "history": [
+      {
+        "serverSessionId": "example-server",
+        "sourceSessionId": "example-run:1",
+        "runId": "example-run",
+        "busId": "mock",
+        "seq": 1,
+        "id": 1,
+        "model": "XM430-W210",
+        "elapsedMs": 0,
+        "timestamp": 1790000000000,
+        "receivedAt": 1790000000000,
+        "basePosition": 100,
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "64": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "65": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "68": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "69": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "70": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "76": {
+            "raw": 1920,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "78": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "80": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "82": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "84": {
+            "raw": 800,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "88": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "90": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "98": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "100": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "102": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "104": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "108": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "112": {
+            "raw": 65,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "116": {
+            "raw": 4196,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "120": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "122": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "123": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "124": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "126": {
+            "raw": 108,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "128": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "132": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "136": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "140": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "144": {
+            "raw": 120,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "146": {
+            "raw": 34,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "147": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          }
+        },
+        "diagnosis": {
+          "state": "normal",
+          "codes": []
+        }
+      },
+      {
+        "serverSessionId": "example-server",
+        "sourceSessionId": "example-run:1",
+        "runId": "example-run",
+        "busId": "mock",
+        "seq": 2,
+        "id": 1,
+        "model": "XM430-W210",
+        "elapsedMs": 100,
+        "timestamp": 1790000000100,
+        "receivedAt": 1790000000100,
+        "basePosition": 100,
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "64": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "65": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "68": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "69": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "70": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "76": {
+            "raw": 1920,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "78": {
+            "raw": 100,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "80": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "82": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "84": {
+            "raw": 800,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "88": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "90": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "98": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "100": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "102": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "104": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "108": {
+            "raw": 10,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "112": {
+            "raw": 65,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "116": {
+            "raw": 4196,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "120": {
+            "raw": 100,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "122": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "123": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "124": {
+            "raw": 8,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "126": {
+            "raw": 122,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "128": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "132": {
+            "raw": 105,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "136": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "140": {
+            "raw": 103,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "144": {
+            "raw": 120,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "146": {
+            "raw": 34,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "147": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          }
+        },
+        "diagnosis": {
+          "state": "normal",
+          "codes": []
+        }
+      }
+    ],
+    "retentionSec": 60,
+    "capacity": 601,
+    "seq": 2,
+    "experiment": {
+      "runId": "example-run",
+      "status": "running",
+      "csvPath": null,
+      "metadataPath": null,
+      "motorModel": "XM430-W210",
+      "motorId": 1,
+      "sampleIntervalSec": 0.1,
+      "flushEveryRows": 1,
+      "startedAt": "2026-09-21T14:13:20+00:00",
+      "endedAt": null,
+      "error": null
+    },
+    "metadata": [
+      {
+        "id": 1,
+        "model": "XM430-W210",
+        "modelNumber": 1030,
+        "firmware": 45,
+        "simulated": true,
+        "source": "backend-mock",
+        "settings": {},
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          }
+        },
+        "limits": {
+          "current": null,
+          "temperature": null,
+          "voltageMin": null,
+          "voltageMax": null
+        }
+      }
+    ],
+    "events": [
+      {
+        "id": "example-run",
+        "time": "2026-09-21T14:13:20+00:00",
+        "severity": "info",
+        "message": "백엔드 가상 데이터 · 진단 결과는 시나리오 예시입니다."
+      }
+    ],
+    "system": {
+      "sourceMode": "mock",
+      "validity": "valid",
+      "experimentStatus": "running",
+      "dataAgeSec": 0,
+      "configuredHz": 10.0,
+      "observedHz": 10.0,
+      "expectedFlushSec": null,
+      "error": null,
+      "readerCaughtUp": true,
+      "writerActive": true
+    }
+  },
+  "history": {
+    "schemaVersion": 1,
+    "serverSessionId": "example-server",
+    "sourceSessionId": "example-run:1",
+    "runId": "example-run",
+    "throughSeq": 2,
+    "latestElapsedMs": 100,
+    "samples": [
+      {
+        "serverSessionId": "example-server",
+        "sourceSessionId": "example-run:1",
+        "runId": "example-run",
+        "busId": "mock",
+        "seq": 1,
+        "id": 1,
+        "model": "XM430-W210",
+        "elapsedMs": 0,
+        "timestamp": 1790000000000,
+        "receivedAt": 1790000000000,
+        "basePosition": 100,
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "64": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "65": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "68": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "69": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "70": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "76": {
+            "raw": 1920,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "78": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "80": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "82": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "84": {
+            "raw": 800,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "88": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "90": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "98": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "100": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "102": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "104": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "108": {
+            "raw": 10,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "112": {
+            "raw": 65,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "116": {
+            "raw": 4196,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "120": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "122": {
+            "raw": 1,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "123": {
+            "raw": 2,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "124": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "126": {
+            "raw": 108,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "128": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "132": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "136": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "140": {
+            "raw": 100,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "144": {
+            "raw": 120,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "146": {
+            "raw": 34,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          },
+          "147": {
+            "raw": 0,
+            "receivedAt": 1790000000000,
+            "status": "received"
+          }
+        },
+        "diagnosis": {
+          "state": "normal",
+          "codes": []
+        }
+      },
+      {
+        "serverSessionId": "example-server",
+        "sourceSessionId": "example-run:1",
+        "runId": "example-run",
+        "busId": "mock",
+        "seq": 2,
+        "id": 1,
+        "model": "XM430-W210",
+        "elapsedMs": 100,
+        "timestamp": 1790000000100,
+        "receivedAt": 1790000000100,
+        "basePosition": 100,
+        "registers": {
+          "0": {
+            "raw": 1030,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "2": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "6": {
+            "raw": 45,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "7": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "8": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "9": {
+            "raw": 250,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "10": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "11": {
+            "raw": 4,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "12": {
+            "raw": 255,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "13": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "20": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "24": {
+            "raw": 10,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "31": {
+            "raw": 80,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "32": {
+            "raw": 160,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "34": {
+            "raw": 95,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "36": {
+            "raw": 885,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "38": {
+            "raw": 1193,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "44": {
+            "raw": 330,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "48": {
+            "raw": 4095,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "52": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "60": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "63": {
+            "raw": 52,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "64": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "65": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "68": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "69": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "70": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "76": {
+            "raw": 1920,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "78": {
+            "raw": 100,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "80": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "82": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "84": {
+            "raw": 800,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "88": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "90": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "98": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "100": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "102": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "104": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "108": {
+            "raw": 10,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "112": {
+            "raw": 65,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "116": {
+            "raw": 4196,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "120": {
+            "raw": 100,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "122": {
+            "raw": 1,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "123": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "124": {
+            "raw": 8,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "126": {
+            "raw": 122,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "128": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "132": {
+            "raw": 105,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "136": {
+            "raw": 2,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "140": {
+            "raw": 103,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "144": {
+            "raw": 120,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "146": {
+            "raw": 34,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          },
+          "147": {
+            "raw": 0,
+            "receivedAt": 1790000000100,
+            "status": "received"
+          }
+        },
+        "diagnosis": {
+          "state": "normal",
+          "codes": []
+        }
+      }
+    ]
+  },
+  "saveConfigRequest": {
+    "source": "mock",
+    "config": {
+      "motor_name": "XM430-W210",
+      "port": "COM6",
+      "baudrate": 57600,
+      "motor_id": 1,
+      "protocol_version": 2.0,
+      "turns": 1.0,
+      "direction": 1,
+      "acceleration_ms": 2000,
+      "profile_duration_ms": 6000,
+      "top_dwell_sec": 1.0,
+      "bottom_dwell_sec": 1.0,
+      "max_cycles": 0,
+      "sample_interval_sec": 0.1,
+      "print_interval_sec": 1.0,
+      "flush_every_rows": 10,
+      "move_timeout_sec": 30.0,
+      "position_tolerance_pulse": 10,
+      "torque_off_on_normal_exit": false,
+      "condition_name": "normal",
+      "load_kg": 0.0
+    }
+  },
+  "idleControlReply": {
+    "saved": null,
+    "defaults": {
+      "motor_name": "XM430-W210",
+      "port": "COM6",
+      "baudrate": 57600,
+      "motor_id": 1,
+      "protocol_version": 2.0,
+      "turns": 1.0,
+      "direction": 1,
+      "acceleration_ms": 2000,
+      "profile_duration_ms": 6000,
+      "top_dwell_sec": 1.0,
+      "bottom_dwell_sec": 1.0,
+      "max_cycles": 0,
+      "sample_interval_sec": 0.1,
+      "print_interval_sec": 1.0,
+      "flush_every_rows": 10,
+      "move_timeout_sec": 30.0,
+      "position_tolerance_pulse": 10,
+      "torque_off_on_normal_exit": false,
+      "condition_name": "normal",
+      "load_kg": 0.0
+    },
+    "run": null,
+    "active": false,
+    "externalActive": false
+  }
+}

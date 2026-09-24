@@ -12,8 +12,8 @@ import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
-from src.dashboard.experiment import acquisition, configuration
-from src.dashboard.experiment.run_manifest import RunManifest
+from motor_dashboard.experiment import acquisition, configuration
+from motor_dashboard.experiment.run_manifest import RunManifest
 
 
 class FakeClock:
@@ -177,7 +177,7 @@ class ExperimentTests(unittest.TestCase):
             expected = "overload_500kg" if load else name
             with self.subTest(condition=name):
                 self.assertEqual(config.output_dir,
-                                 configuration.PROJECT_ROOT / "results" / "raw" / "XM430-W210" / expected)
+                                 configuration.PROJECT_ROOT / "runtime" / "standalone_runs" / "XM430-W210" / expected)
         for amount, expected in [(0.5, "overload_0.5kg"), (1.0, "overload_1kg"),
                                  (500.0, "overload_500kg"), (750, "overload_750kg"),
                                  (12.5, "overload_12.5kg"), (0.00001, "overload_0.00001kg")]:

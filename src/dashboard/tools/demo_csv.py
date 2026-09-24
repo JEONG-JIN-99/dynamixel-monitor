@@ -9,9 +9,11 @@ from pathlib import Path
 import sys
 import time
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-from src.dashboard.experiment.configuration import load_config
-from src.dashboard.experiment.run_manifest import RunManifest
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from bootstrap import load_package
+load_package()
+from motor_dashboard.experiment.configuration import load_config
+from motor_dashboard.experiment.run_manifest import RunManifest
 
 ROOT = Path(__file__).resolve().parents[1] / "runtime" / "demo"
 

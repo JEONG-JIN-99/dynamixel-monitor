@@ -1,7 +1,7 @@
 host = "127.0.0.1"
 port = 8000
 manifest_path = "../runtime/current_experiment.json"
-data_root = "../../../results/raw"
+data_root = "../runtime/standalone_runs"
 poll_interval_sec = 0.1
 retention_sec = 60
 max_samples = 12000
