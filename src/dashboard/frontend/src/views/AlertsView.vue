@@ -84,9 +84,6 @@ function time(at: number | null | undefined) {
     <header class="alerts-heading">
       <h2>알림</h2>
     </header>
-    <div v-if="alerts.storageWarning" class="alerts-notice" role="status">
-      알림 기록 오류
-    </div>
     <div class="alerts-summary">
       <div>
         <span>전체 기록</span

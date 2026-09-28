@@ -3,14 +3,13 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { use } from "echarts/core";
 import type { EChartsType } from "echarts/core";
 import { init, connect } from "echarts/core";
-import { LineChart } from "echarts/charts";
+import { CustomChart, LineChart } from "echarts/charts";
 import {
   GridComponent,
   TooltipComponent,
   LegendComponent,
   DataZoomComponent,
   MarkLineComponent,
-  MarkAreaComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
 import { Maximize2, RotateCcw } from "lucide-vue-next";
@@ -24,12 +23,12 @@ import type {
 } from "../../types/analysis";
 use([
   LineChart,
+  CustomChart,
   GridComponent,
   TooltipComponent,
   LegendComponent,
   DataZoomComponent,
   MarkLineComponent,
-  MarkAreaComponent,
   CanvasRenderer,
 ]);
 const props = defineProps<{
@@ -97,7 +96,7 @@ function render() {
     animation: false,
     backgroundColor: "transparent",
     textStyle: { fontFamily: "Segoe UI, Malgun Gothic, sans-serif" },
-    grid: { left: 54, right: 20, top: 12, bottom: 32 },
+    grid: { left: 54, right: 20, top: props.faultSegments !== undefined ? 28 : 12, bottom: 32 },
     legend: {
       show: false,
       data: props.fields.map((field) => field.label),
@@ -170,7 +169,7 @@ function render() {
         moveOnMouseMove: true,
       },
     ],
-    series: props.fields.map((field, index) => ({
+    series: [...props.fields.map((field, index) => ({
       markLine:
         index === 0
           ? {
@@ -190,17 +189,6 @@ function render() {
                 yAxis: l.value,
                 name: `${l.label} · ${l.value.toFixed(2)}`,
               })),
-            }
-          : undefined,
-      markArea:
-        index === 0
-          ? {
-              silent: true,
-              itemStyle: { color: "rgba(255, 125, 151, 0.09)" },
-              data: (props.faultSegments ?? []).map((s) => [
-                { xAxis: s.start },
-                { xAxis: s.end },
-              ]),
             }
           : undefined,
       id: field.key,
@@ -225,7 +213,37 @@ function render() {
         sample.elapsedMs / 1000,
         sample[field.key],
       ]),
-    })),
+    })), {
+      id: "fault-regions",
+      type: "custom",
+      silent: true,
+      z: 1,
+      clip: false,
+      tooltip: { show: false },
+      dimensions: ["start", "end", "resolved"],
+      encode: { x: [0, 1], y: [] },
+      data: (props.faultSegments ?? []).map(s => [s.start, s.end, s.resolved ? 1 : 0]),
+      renderItem: (params: any, api: any) => {
+        const box = params.coordSys;
+        const start = api.coord([api.value(0), 0])[0];
+        const end = api.coord([api.value(1), 0])[0];
+        const left = Math.max(box.x, start);
+        const right = Math.min(box.x + box.width, end);
+        if (right <= left) return;
+        const color = "#f08080";
+        const children: any[] = [
+          { type: "rect", shape: { x: left, y: box.y, width: right - left, height: box.height }, style: { fill: "rgba(240, 128, 128, 0.10)" } },
+          { type: "rect", shape: { x: left, y: box.y, width: right - left, height: 2 }, style: { fill: color } },
+        ];
+        for (const x of [start, ...(api.value(2) ? [end] : [])]) {
+          if (x >= box.x && x <= box.x + box.width)
+            children.push({ type: "line", shape: { x1: x, x2: x, y1: box.y + 2, y2: box.y + box.height }, style: { stroke: color, lineWidth: 1, lineDash: [4, 3], opacity: 0.8 } });
+        }
+        if (right - left >= 52)
+          children.push({ type: "text", style: { x: (left + right) / 2, y: box.y - 6, text: "이상 구간", fill: color, font: "10px Malgun Gothic, sans-serif", align: "center", verticalAlign: "bottom" } });
+        return { type: "group", children };
+      },
+    }],
   });
 }
 function resetZoom() {

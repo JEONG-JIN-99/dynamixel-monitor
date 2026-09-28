@@ -48,6 +48,7 @@ export interface AnalysisPoint extends PlotPoint {
 }
 export type AnalysisInput = MotorFrame | Sample;
 export interface TimeSegment {
+  resolved?: boolean;
   start: number;
   end: number;
   label: string;

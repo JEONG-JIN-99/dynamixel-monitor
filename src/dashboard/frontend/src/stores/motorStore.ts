@@ -92,7 +92,15 @@ export const useMotorStore = defineStore("motor", () => {
             sample.sourceSessionId === message.sourceSessionId &&
             sample.runId === message.runId,
         ),
-        { snapshot: true, active: ["running", "finishing"].includes(message.system.experimentStatus) && message.system.validity === "valid" && message.system.readerCaughtUp },
+        {
+          snapshot: true,
+          active:
+            ["running", "finishing"].includes(
+              message.system.experimentStatus,
+            ) &&
+            message.system.validity === "valid" &&
+            message.system.readerCaughtUp,
+        },
       );
       sampleListeners.forEach((listener) => listener(message.history, true));
       return;
@@ -115,7 +123,12 @@ export const useMotorStore = defineStore("motor", () => {
         retentionSec.value,
         capacity,
       );
-      alerts.ingest(samples, {active: ["running", "finishing"].includes(system.value.experimentStatus) && system.value.readerCaughtUp});
+      alerts.ingest(samples, {
+        active:
+          ["running", "finishing"].includes(system.value.experimentStatus) &&
+          system.value.readerCaughtUp &&
+          system.value.writerActive !== false,
+      });
       sampleListeners.forEach((listener) => listener(samples, false));
     } else if (message.type === "system") {
       system.value = message.system;

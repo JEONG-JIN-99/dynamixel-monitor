@@ -205,11 +205,18 @@ const span = computed(() =>
         (points.value.at(-1)!.elapsedMs - points.value[0]!.elapsedMs) / 1000,
       ),
 );
-const faults = computed(() =>
-  timeSegments(points.value, "diagnosis", intervalMs.value).filter(
-    (s) => s.tone === "fault",
-  ),
-);
+const faults = computed(() => {
+  const segments = timeSegments(points.value, "diagnosis", intervalMs.value);
+  const result: typeof segments = [];
+  for (const segment of segments) {
+    if (segment.tone !== "fault") continue;
+    const previous = result.at(-1);
+    if (previous && previous.end === segment.start) previous.end = segment.end;
+    else result.push({ ...segment });
+  }
+  const normalTimes = new Set(points.value.filter(p => diagnosisView(p).state === "normal").map(p => p.elapsedMs / 1000));
+  return result.map(segment => ({ ...segment, resolved: normalTimes.has(segment.end) }));
+});
 const notice = computed(() => {
   if (isReplay.value)
     return replay.loading.value ? "기록 불러오는 중" : replay.error.value;

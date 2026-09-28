@@ -128,7 +128,7 @@ async function stream(page: Page) {
   };
 }
 
-test("individual confirmation survives reload without clearing other alerts or resolving faults", async ({
+test("individual confirmation preserves other alerts, while reload starts empty", async ({
   page,
 }) => {
   const source = await stream(page);
@@ -148,10 +148,6 @@ test("individual confirmation survives reload without clearing other alerts or r
   await expect(page.locator(".alert-badge")).toHaveText("1");
   await overload.locator(".alert-read-target").click();
   await expect(page.locator(".alert-badge")).toHaveText("1");
-  await page.reload();
-  await expect(page.locator(".alert-row")).toHaveCount(2);
-  await expect(page.locator(".alert-badge")).toHaveText("1");
-  await expect(overload).toHaveAttribute("data-read", "true");
   source.push(null);
   await expect(page.locator('.alert-row[data-active="false"]')).toHaveCount(2);
   source.push([]);
@@ -165,8 +161,8 @@ test("individual confirmation survives reload without clearing other alerts or r
   await expect(page.locator(".alert-badge")).toHaveText("1");
   await expect(page.locator('.alert-row[data-read="false"]')).toHaveCount(1);
   await page.reload();
-  await expect(page.locator(".alert-row")).toHaveCount(3);
-  await expect(page.locator(".alert-badge")).toHaveText("1");
+  await expect(page.locator(".alerts-empty")).toBeVisible();
+  await expect(page.locator(".alert-badge")).toHaveCount(0);
 });
 
 test("visible arrivals, tab return and source switches never auto-confirm alerts", async ({
@@ -197,7 +193,7 @@ test("visible arrivals, tab return and source switches never auto-confirm alerts
   source.stale();
   await expect(page.locator('.alert-row[data-active="false"]')).toHaveCount(2);
   await selectSource(page, "mock");
-  await expect(page.locator(".alert-row")).toHaveCount(2);
+  await expect(page.locator(".alerts-empty")).toBeVisible();
   await selectSource(page, "csv");
   await expect(page.locator(".alert-row")).toHaveCount(2);
   await expect(page.locator(".alert-badge")).toHaveText("2");
@@ -228,26 +224,33 @@ test("pagination, search and filtering preserve unread counts until a row is act
   await expect(page.locator(".alert-badge")).toHaveText("25");
 });
 
-test("storage failures and invalid saved data leave the dashboard usable", async ({
-  page,
-}) => {
-  await page.addInitScript((key) => {
-    localStorage.setItem(key, "{bad");
-    Storage.prototype.setItem = () => {
-      throw new DOMException("Quota exceeded", "QuotaExceededError");
-    };
-  }, storageKey);
-  const source = await stream(page);
-  await page.goto("/alerts?source=csv");
-  await expect(page.locator(".alerts-notice").first()).toContainText(
-    "알림 기록 오류",
-  );
-  source.push(["overload"]);
-  await expect(page.locator(".alert-row")).toHaveCount(1);
-  await expect(page.locator(".alerts-notice").first()).toContainText(
-    "알림 기록 오류",
-  );
-});
+for (const mode of ["csv", "mock"]) {
+  test(`stored four alerts and snapshot faults never notify in ${mode}`, async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      for (const [mode,key] of [["csv","motor-dashboard.diagnosis-alerts.v1"],["mock","motor-dashboard.mock-diagnosis-alerts.v1"]]) {
+        const context=JSON.stringify([JSON.stringify([mode,"old-server","old-source","old-run"]),"USB-1","XM430-W210",1]);
+        const records=["friction","overload","undervoltage","overvoltage"].map((code,i)=>({
+          id:`old-${i}`,context,source:mode,model:"XM430-W210",motorId:1,busId:"USB-1",runId:"old-run",code,
+          startedAt:1790000000000,lastSeenAt:1790000000000,resolvedAt:null,read:false,readAt:null
+        }));
+        localStorage.setItem(key,JSON.stringify({version:1,records,cursors:{}}));
+      }
+    });
+    const source = await stream(page);
+    source.seed(["friction", "overload"]);
+    await page.goto(`/alerts?source=${mode}`);
+    await expect.poll(source.ready).toBe(true);
+    await expect(page.locator(".alerts-empty")).toBeVisible();
+    await expect(page.locator(".alert-badge")).toHaveCount(0);
+    source.push(["overload"]);
+    await expect(page.locator(".alert-badge")).toHaveText("1");
+    await page.reload();
+    await expect(page.locator(".alerts-empty")).toBeVisible();
+    await expect(page.locator(".alert-badge")).toHaveCount(0);
+  });
+}
 
 for (const width of [1440, 900, 390]) {
   test("alerts layout and filters " + width, async ({ page }) => {
@@ -336,7 +339,7 @@ test("completed mock history does not create four unread alerts after entry, rel
     page.getByRole("button", { name: "해제됨", exact: true }),
   ).toBeVisible();
 });
-test("mock row confirmation changes summary, filters and badge and survives reload", async ({
+test("mock row confirmation changes summary, filters and badge but reload starts empty", async ({
   page,
 }) => {
   const source = await stream(page);
@@ -361,7 +364,6 @@ test("mock row confirmation changes summary, filters and badge and survives relo
     page.locator(".alert-row .alert-time time").last(),
   ).not.toHaveText("—");
   await page.reload();
-  await expect(page.locator(".alert-row")).toHaveCount(2);
-  await expect(page.locator(".alert-badge")).toHaveText("1");
-  await expect(page.locator('.alert-row[data-read="true"]')).toHaveCount(1);
+  await expect(page.locator(".alerts-empty")).toBeVisible();
+  await expect(page.locator(".alert-badge")).toHaveCount(0);
 });
