@@ -2,7 +2,8 @@
 
 PC → U2D2 → DYNAMIXEL 구성으로 모터에 직접 명령을 보내고 CSV를 수집합니다.
 지원 모델은 XM430-W210, XM430-W350, XL430-W250입니다.
-설정한 모델 한 대를 실행당 제어합니다.
+기본 터미널 실험은 설정한 모델 한 대를 실행당 제어합니다.
+웹 기반 [대시보드 V2](src/dashboard_v2/README.md)는 8개 모터의 상태 표시와 독립 실험 관리를 제공합니다.
 
 ## 폴더 구성
 
@@ -14,6 +15,8 @@ motor/
 │   ├── repeated_cycle.py     # 반복 왕복 실행
 │   ├── configuration.py      # 설정 검증과 모델별 정보
 │   └── acquisition.py        # 공통 모터 제어·데이터 기록
+├── src/dashboard/            # 기존 단일 모터 대시보드 (8000번 포트)
+├── src/dashboard_v2/         # 8개 모터 대시보드·독립 실행 및 협업 연결 (8001번 포트)
 ├── results/
 │   ├── raw/
 │   │   ├── XM430-W210/       # 아래에 normal/, overload_0.5kg/ 등 조건 폴더
@@ -30,7 +33,7 @@ motor/
 ## 설치
 
 Python 3.11 이상을 사용합니다(TOML 읽기용 표준 라이브러리 사용).
-프로젝트 루트의 PowerShell에서 실행합니다. 아래는 가상환경 이름을 `.venv`로 만드는 예시입니다:
+프로젝트 루트의 PowerShell에서 실행합니다. 기존 실험과 대시보드는 루트 `.venv` 하나를 공용으로 사용합니다:
 
 ```powershell
 python -m venv .venv
@@ -41,6 +44,52 @@ python -m pip install -r requirements.txt
 이미 가상환경이 있으면 생성 단계는 생략하고 본인의 환경을 활성화하세요.
 가상환경 이름이나 경로가 다르면 활성화 경로를 맞춰 주세요. 이후 명령은 활성화된 터미널에서 실행합니다.
 확인한 로컬 환경은 Python 3.14.5, pyserial 3.5, dynamixel-sdk 4.0.5입니다.
+
+## CSV 대시보드 실행
+
+루트 가상환경을 활성화한 터미널에서 실행합니다. 루트 requirements.txt가 대시보드의 검증된 웹 서버·테스트 의존성도 설치합니다.
+
+```powershell
+python .\src\dashboard\main.py
+```
+
+[http://127.0.0.1:8000](http://127.0.0.1:8000)에서 화면을 봅니다. 실제 실험은 별도 터미널에서 같은 루트 가상환경을 활성화한 뒤 아래 복사본으로 실행합니다.
+
+```powershell
+python .\src\dashboard\experiment\repeated_cycle.py
+```
+
+복사본 설정·CSV 경로·Frontend 빌드와 데모 실행은 [대시보드 안내](src/dashboard/README.md)를 참고하세요. 원본 실험 소스와 설정은 유지되며 Python 환경만 공유합니다.
+
+
+## 대시보드 V2 — 8개 모터 제어·모니터링
+
+`src/dashboard_v2`는 백엔드, 프론트엔드, 가상 데이터 생성기, 실험 코드 복사본을 담은 독립 프로젝트입니다. 현재 모터 1·2는 실제/가상 모터를 선택하고, 모터 3~8은 서로 다른 가상 시나리오로 시연합니다. 지원 화면 모델은 XM430-W210 / XM430-W350입니다.
+
+- **개요:** 기본 3D 로봇과 2D 도면 전환, 모터 1~8의 위치·상태·시작/종료. 모터별 개요에서는 측정값과 최근 60초 그래프를 표시합니다.
+- **제어:** 모터별 설정 저장과 독립 실행. 종료 요청은 현재 왕복을 마친 뒤 적용하며 실제 모터의 토크를 유지합니다.
+- **모터·상세 분석:** 53개 레지스터 표시, 60초부터 전체 실험까지 구간 선택, 진단 결과와 이상 구간 표시.
+- **알림·로그:** 모터별 이상 알림·전체 확인, 날짜별 실험 기록과 과거 분석.
+
+루트의 기존 `.venv`를 그대로 사용할 수 있습니다. Git으로 처음 받은 경우 Python 의존성을 설치하고 프론트엔드를 빌드합니다(Node.js 22.12 이상 필요).
+
+```powershell
+# 프로젝트 루트에서 실행. .venv가 없다면 먼저 python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r .\src\dashboard_v2\requirements.lock
+npm --prefix .\src\dashboard_v2\frontend ci
+npm --prefix .\src\dashboard_v2\frontend run build
+.\.venv\Scripts\python.exe .\src\dashboard_v2\main.py
+```
+
+[http://127.0.0.1:8001](http://127.0.0.1:8001)에 접속합니다. 서버 실행만으로 실험이 시작되지는 않습니다. 장치 없이 확인하려면 **제어 → 모터 1 → 가상 모터 → 설정 저장 → 실험 시작**을 선택하거나, 개요에서 모터 3~8의 준비된 가상 설정으로 시작합니다. 한 모터만 실행해도 됩니다.
+
+로컬 빌드와 의존성이 이미 준비되어 있으면 마지막 `main.py` 실행 명령만 사용하면 됩니다. `runtime/`의 실험 기록·저장 설정, `.venv`, `node_modules`, `frontend/dist`는 로컬에 유지하고 Git에서는 제외합니다. 새로 복제한 환경에는 기존 실험 기록이 없으며 위 설치·빌드가 필요합니다. 전달용 ZIP에는 빌드 결과가 포함됩니다.
+
+협업자는 측정 레지스터·진단 결과 및 제어/이력 API를 연결합니다. 실제 실험 방식을 바꾸어도 MOCK의 동작 로직이 자동 변경되는 것은 아니며, 제어 화면과 가상 시나리오도 필요에 따라 맞춰야 합니다. 기존 원본 실험과 V1은 별도로 유지됩니다.
+
+- [V2 실행·개발 안내](src/dashboard_v2/README.md)
+- [협업자 연결 명세 및 데이터 형식](src/dashboard_v2/request.md)
+- [검증 범위와 결과](src/dashboard_v2/VALIDATION.md)
 
 ## 실험 설정
 

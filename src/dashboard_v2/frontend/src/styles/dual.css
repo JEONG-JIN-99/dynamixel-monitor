@@ -1,0 +1,102 @@
+.dual-page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.dual-page-heading h2 {
+  margin: 0;
+  font-size: 20px;
+}
+.dual-selection {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+.motor-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.motor-summary {
+  padding: 22px;
+  min-width: 0;
+}
+.summary-diagnosis {
+  font-size: 22px;
+  color: #91a5c0;
+}
+.summary-diagnosis.normal {
+  color: #59d6b2;
+}
+.summary-diagnosis.fault {
+  color: #f08080;
+}
+.summary-motor-visual {
+  height: 240px;
+  position: relative;
+}
+.summary-movement {
+  text-align: right;
+  color: #b6c9e0;
+  margin: 0 0 18px;
+}
+.summary-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 12px;
+  margin: 26px 0;
+}
+.summary-metrics span {
+  display: block;
+  color: #91a5c0;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.summary-metrics strong {
+  display: block;
+  font-size: 26px;
+}
+.summary-metrics small {
+  font-size: 12px;
+  font-weight: 400;
+  color: #91a5c0;
+}
+.summary-timing {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #91a5c0;
+  font-size: 12px;
+  margin-bottom: 22px;
+}
+.summary-link {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+}
+.motor-alert-section {
+  margin-bottom: 32px;
+}
+.motor-alert-section .alerts-heading h2 {
+  font-size: 19px;
+}
+@media (max-width: 900px) {
+  .motor-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .summary-motor-visual {
+    height: 200px;
+  }
+}
+@media (max-width: 480px) {
+  .motor-summary {
+    padding: 14px;
+  }
+  .summary-metrics strong {
+    font-size: 21px;
+  }
+}

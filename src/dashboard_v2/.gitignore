@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+.pytest_cache/
+runtime/*
+!runtime/.gitkeep
+frontend/node_modules/
+frontend/dist/
+
+# Generated verification output and machine-local configuration stay on disk.
+test-results/
+playwright-report/
+coverage/
+.coverage
+htmlcov/
+*.log
+*.tmp
+*.zip
+.env
+.env.*
+!.env.example
