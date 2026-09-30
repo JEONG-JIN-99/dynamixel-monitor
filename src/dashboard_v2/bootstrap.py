@@ -7,7 +7,7 @@ import sys
 def load_package():
     name = "motor_dashboard"
     if name not in sys.modules:
-        root = Path(__file__).resolve().parent
+        root = Path(__file__).resolve().parent / "backend"
         spec = importlib.util.spec_from_file_location(name, root / "__init__.py",
                                                      submodule_search_locations=[str(root)])
         package = importlib.util.module_from_spec(spec)

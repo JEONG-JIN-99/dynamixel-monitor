@@ -109,36 +109,48 @@ Vite의 5174번 화면이 `/motors/{slot}/api`와 `/motors/{slot}/ws`를 8001번
 
 ```text
 dashboard/
-  dual.py / bus_pool.py / shared_bus.py  모터 서비스 분리와 공유 버스 통신
-  main.py                     서버 실행 및 정적 웹 제공
-  bootstrap.py                위치에 독립적인 Python 패키지 로딩
-  settings.py                 기본 경로와 서버 설정
-  routes.py / stream.py       HTTP API / WebSocket
-  control.py / control_worker.py  실험 생명주기 / 실제 장치 전용 프로세스
-  mock_source.py              가상 53개 원시 값과 진단 시나리오
-  run_repository.py           실험 설정·목록·기록 관리
-  history_archive.py          가상 데이터 CSV 기록·조회
-  source_manager.py / csv_reader.py / normalize.py / history_query.py
-                              기존 실험 CSV 호환 입력 경로
-  experiment/                 독립된 모터 실험 코드 복사본
-  config/                     기본 서버·실험·데모 설정
+  main.py                     기존 명령을 유지하는 서버 실행 진입점
+  bootstrap.py                backend를 Python 패키지로 로딩
+  backend/
+    app.py                    서버 생성 및 정적 웹 제공
+    settings.py               대시보드 루트 기준 경로와 서버 설정
+    api/routes.py             HTTP API / WebSocket 연결
+    control/
+      fleet.py                8개 모터 서비스 구성·실제 실행 연결
+      controller.py           모터별 시작·왕복 종료·가상 실행 관리
+      worker.py               단일 실제 실험용 별도 프로세스 진입점
+    experiment/
+      acquisition.py          왕복 이동·대기·종료 정책·실제 CSV 수집
+      configuration.py        실험 설정 검증
+      repeated_cycle.py       독립 실험 실행 진입점
+      run_manifest.py         실행 중인 CSV 위치 안내
+    adapters/
+      dynamixel/
+        device.py             SDK 연결·레지스터 읽기/쓰기·동기 수집
+        bus_pool.py           공유 포트·통신 잠금 관리
+        shared_bus.py         실험 로직과 공유 버스 어댑터 연결
+      mock/source.py          가상 53개 원시 값·궤적·진단 시나리오
+    telemetry/                값 정규화·60초 버퍼·실시간 전달·알림
+    storage/                  CSV 읽기·기록·이력 조회·파일 잠금
+    tests/                    실제 장치 없는 백엔드 검증
   frontend/
-    src/                      Vue 3 + TypeScript + Pinia + ECharts 화면
-    dist/                     main.py가 제공하는 빌드 결과
-    package.json / package-lock.json
+    src/                      Vue 3 + TypeScript + Pinia + ECharts + Three.js
+    dist/                     서버가 제공하는 로컬 빌드 결과
     e2e/ / e2e-control/        브라우저 검증
-  contracts/examples.json     백엔드 구현에서 생성한 완전한 JSON 예시
-  tools/
-    package_dashboard.py      깨끗한 전달 ZIP 생성
-    export_contract_examples.py  통신 예시 재생성
-    demo_csv.py               선택적 CSV 입력 데모
+  config/                     기본 서버·실험·데모 설정
+  contracts/examples.json     완전한 JSON 통신 예시
+  tools/                      ZIP 생성·통신 예시 생성·CSV 데모
   docs/history/               이전 설계·페이지별 구현 설명
-  tests/                      실제 장치 없는 백엔드 검증
-  requirements.txt            직접 Python 의존성 범위
-  requirements.lock           검증용 고정 Python 의존성
-  runtime/                    실행 중 만들어지는 설정·CSV·기록
+  requirements.txt / requirements.lock
+  runtime/                    기존 위치를 유지하는 설정·CSV·기록
   README.md / request.md      실행 안내 / 협업자 통합 계약
 ```
+
+`backend/` 아래에 별도의 `motor_dashboard/` 폴더를 만들지 않습니다. `bootstrap.py`가 이 디렉터리를 Python 안에서 `motor_dashboard`라는 이름으로 로딩하므로 폴더 이름을 바꾸거나 단독 전달해도 실행할 수 있습니다. 내부 모듈은 `motor_dashboard.control.fleet`처럼 가져옵니다.
+
+실험 절차는 `experiment/`, 실제 SDK 통신은 `adapters/dynamixel/`, 가상 데이터 생성은 `adapters/mock/`에 있습니다. 실제 실험은 `Experiment`가 SDK 어댑터를 상속해 사용하고, V2의 `SharedExperiment`가 공유 포트 처리를 덧붙입니다. 실제와 가상의 실행 로직은 여전히 별도이므로 실제 제어 방식을 바꿔도 가상 궤적이 자동 변경되지는 않습니다.
+
+실행 명령 `python main.py`, 포트 8001, API·JSON 계약, `config/`와 `runtime/` 위치는 유지합니다. 이전 백엔드 모듈을 직접 import하던 외부 코드는 위 새 경로로 수정해야 합니다.
 
 ## 5. 저장 구조
 
@@ -163,7 +175,7 @@ runtime/motors/
 
 설정 저장은 모터별 `control/saved.json`만 덮어씁니다. 설정 저장 이력은 따로 생성하지 않습니다. 실험 시작 시 해당 실행 폴더에 `config.toml`과 `metadata.json`을 만들며, 실패·중단된 실행도 기록으로 남습니다. 기존 `configurations` 파일은 읽거나 추가 생성하지 않으며 자동 삭제하지 않습니다.
 
-날짜별 실험 폴더는 한국 시간 기준입니다. DB는 사용하지 않습니다. 제어 화면에서 시작한 실행은 `mock_runs` 또는 `experiment_runs`에 저장되고 로그에서 조회됩니다. `experiment/repeated_cycle.py`를 직접 실행한 CSV는 `standalone_runs`에 저장되며, 이 호환 경로의 기록은 자동으로 로그 목록에 등록되지 않습니다.
+날짜별 실험 폴더는 한국 시간 기준입니다. DB는 사용하지 않습니다. 제어 화면에서 시작한 실행은 `mock_runs` 또는 `experiment_runs`에 저장되고 로그에서 조회됩니다. `backend/experiment/repeated_cycle.py`를 직접 실행한 CSV는 `standalone_runs`에 저장되며, 이 호환 경로의 기록은 자동으로 로그 목록에 등록되지 않습니다.
 
 설정 파일의 상대 경로는 설정 파일 위치 기준입니다. 기존 외부 CSV를 계속 연결하려면 `data_root`와 안내 파일을 명시적으로 설정합니다. 이전 `results/raw` 기록을 자동 이동하거나 삭제하지 않습니다.
 
@@ -188,7 +200,7 @@ runtime/motors/
 `dashboard` 폴더에서:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests -q
+.\.venv\Scripts\python.exe -m pytest backend/tests -q
 cd frontend
 npm ci
 npm test

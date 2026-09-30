@@ -29,9 +29,9 @@ V2는 `motorSlot` 1~8에 대해 기존 단일 모터 계약을 각각 제공합�
 - `power`: `on` / `off` / `unknown`. `moving`: true / false / null. 정지, 토크 해제, 전원 차단, 통신 끊김을 같은 상태로 취급하지 마세요.
 - 현재 참조 서버는 실제 수집이 유효하며 writer가 실행 중이면 on으로, 그 외는 unknown으로 표시합니다. 하드웨어 전원 차단을 검출하는 센서는 구현하지 않았습니다. 협업자 서버에서 off를 전달하려면 확인 가능한 전원 정보가 있어야 합니다.
 - 가상 모터는 최초 대기 시 off, 실험 실행·왕복 종료 대기 중 on, 종료(completed/failed/interrupted) 후 off·moving=null입니다. `motorStatus`는 현재 시뮬레이터 상태이며 종료된 CSV의 마지막 레지스터·판정은 과거 기록으로 보존합니다. 실행 중의 멈춤(on·moving=false)과 종료(off)는 구분합니다. 실제 모터의 종료는 토크 유지이며, 수집 종료만으로 전원 off를 추정하지 않습니다.
-- 실제 슬롯은 1·2(`allowedSources: ["real", "mock"]`), 3~8은 가상 전용입니다. 변경 지점은 `dual.py`의 REAL_SLOTS입니다. 요청 검증은 프론트와 백엔드 양쪽에 적용합니다.
+- 실제 슬롯은 1·2(`allowedSources: ["real", "mock"]`), 3~8은 가상 전용입니다. 변경 지점은 `backend/control/fleet.py`의 REAL_SLOTS입니다. 요청 검증은 프론트와 백엔드 양쪽에 적용합니다.
 - 3~8의 최초 기본 설정은 저장만 하고 실험을 시작하지 않습니다. 기존 저장 설정은 덮어쓰지 않습니다.
-- 기존 레지스터 샘플 계약은 동일합니다. 실제 CSV 열을 추가해도 53개 주소로 자동 변환되지는 않습니다. `csv_reader.py` 검증과 `normalize.py` 매핑을 변경하거나 공통 registers 형식의 새 어댑터를 제공하세요. 실시간과 과거 조회 모두 같은 형식을 반환해야 합니다.
+- 기존 레지스터 샘플 계약은 동일합니다. 실제 CSV 열을 추가해도 53개 주소로 자동 변환되지는 않습니다. `backend/storage/csv_reader.py` 검증과 `backend/telemetry/normalize.py` 매핑을 변경하거나 공통 registers 형식의 새 어댑터를 제공하세요. 실시간과 과거 조회 모두 같은 형식을 반환해야 합니다.
 
 ---
 
@@ -53,25 +53,27 @@ V2는 `motorSlot` 1~8에 대해 기존 단일 모터 계약을 각각 제공합�
 
 두 가지 연결 방법이 있습니다.
 
-- **현재 서버 유지:** `mock_source.py`/`control.py`의 가상 데이터 생산부에 대응하는 실제 수집 어댑터를 만들고 `TelemetryHub`로 snapshot·증분을 발행합니다. 수집은 SDK 전용 스레드/프로세스가 맡고 웹 이벤트 루프를 막지 않습니다.
+- **현재 서버 유지:** `backend/adapters/mock/source.py`/`backend/control/controller.py`의 가상 데이터 생산부에 대응하는 실제 수집 어댑터를 만들고 `TelemetryHub`로 snapshot·증분을 발행합니다. 수집은 SDK 전용 스레드/프로세스가 맡고 웹 이벤트 루프를 막지 않습니다.
 - **협업자 서버로 교체:** 아래 HTTP/WS API를 같은 경로로 제공하고 빌드된 `frontend/dist`를 제공하거나 리버스 프록시로 같은 origin에 연결합니다. 저장 방식은 CSV·DB 어느 쪽이어도 됩니다.
 
 현재 실제 실험 복사본은 일부 측정 주소의 CSV를 제공하는 호환 경로입니다. 53개 전부를 수집하거나 알고리즘 판정을 자동 생성하는 구현으로 간주하면 안 됩니다. SDK 오류, condition 이름 또는 하드웨어 오류 비트를 알고리즘 판정 대신 보내지 마세요.
 
 ### 현재 서버를 활용할 때 수정할 곳
 
+백엔드 코드는 `backend/` 바로 아래에 역할별로 나눴습니다. `main.py`는 실행 진입점이며 앱 구성은 `backend/app.py`에 있습니다. 폴더 재배치로 HTTP/WS 주소, JSON 필드, 설정·CSV 저장 경로는 바뀌지 않았습니다.
+
 | 연결 대상 | 시작 파일 / 역할 |
 |---|---|
-| 실제 실험 실행·종료 | `dual.py`의 `MotorController.run_real()`, `shared_bus.py`, `experiment/` — V2 실제 실행 진입점이며 두 실제 모터는 공유 버스를 사용 |
-| CSV 열·단위가 다른 수집기 | `csv_reader.py`, `normalize.py`, `source_manager.py`, `history_query.py` — 파일 검증·실시간 변환·과거 이력 변환을 함께 수정 |
-| CSV 없는 직접 수집 | `main.py`의 슬롯별 앱, `stream.py`의 `TelemetryHub` — 실제 채널의 초기 snapshot과 이후 증분을 제공하고 이력 저장·조회도 연결 |
-| 제어·저장·로그 | `control.py`, `run_repository.py`, `routes.py` — 설정 저장, 시작/왕복 종료, 실행별 기록 관리 |
+| 실제 실험 실행·종료 | `backend/control/fleet.py`의 `MotorController.run_real()`, `backend/adapters/dynamixel/device.py`·`shared_bus.py`, `backend/experiment/` — V2 실제 실행 진입점이며 두 실제 모터는 공유 버스를 사용 |
+| CSV 열·단위가 다른 수집기 | `backend/storage/csv_reader.py`, `backend/telemetry/normalize.py`, `backend/telemetry/source_manager.py`, `backend/storage/history_query.py` — 파일 검증·실시간 변환·과거 이력 변환을 함께 수정 |
+| CSV 없는 직접 수집 | `backend/app.py`의 슬롯별 앱, `backend/telemetry/stream.py`의 `TelemetryHub` — 실제 채널의 초기 snapshot과 이후 증분을 제공하고 이력 저장·조회도 연결 |
+| 제어·저장·로그 | `backend/control/controller.py`, `backend/storage/run_repository.py`, `backend/api/routes.py` — 설정 저장, 시작/왕복 종료, 실행별 기록 관리 |
 | 진단 결과 | 각 Sample의 `diagnosis` — 측정 시점에 맞춰 붙이고 실시간·저장 이력에 동일하게 보존 |
-| 현재 전원·이동 상태 | `dual.py`의 `MotorController.state()` — `motorStatus`를 실제 관측 정보에 맞춰 구성 |
+| 현재 전원·이동 상태 | `backend/control/fleet.py`의 `MotorController.state()` — `motorStatus`를 실제 관측 정보에 맞춰 구성 |
 
 실험 코드 한 파일을 바꾸는 것만으로 다른 CSV 형식이나 판정 결과까지 자동 연결되지는 않습니다. 우선 한 슬롯에 정상 데이터와 이상 판정을 연결해 확인한 뒤 다른 슬롯으로 확장하세요. 실제 모터를 3~8에도 연결하려면 `REAL_SLOTS`뿐 아니라 가상 전용 초기 설정·저장 설정과 장치 구성도 함께 검토해야 합니다.
 
-실제 제어와 MOCK은 같은 설정 형식을 사용하지만 실행 로직은 분리되어 있습니다. 기존 이동 시간·가속 시간·회전수·방향·대기 설정은 MOCK에도 적용되지만, 실제 실험을 연속 회전이나 다른 제어 방식으로 교체하면 `mock_source.py`의 궤적·단계 생성도 별도로 맞춰야 합니다. 전류·온도·이상 결과는 물리 시뮬레이션이 아닌 가상 시나리오입니다. 새로운 설정 항목과 종료 정책을 도입할 때는 제어 화면, 설정 검증 및 제어 API도 함께 변경하세요.
+실제 제어와 MOCK은 같은 설정 형식을 사용하지만 실행 로직은 분리되어 있습니다. 기존 이동 시간·가속 시간·회전수·방향·대기 설정은 MOCK에도 적용되지만, 실제 실험을 연속 회전이나 다른 제어 방식으로 교체하면 `backend/adapters/mock/source.py`의 궤적·단계 생성도 별도로 맞춰야 합니다. 전류·온도·이상 결과는 물리 시뮬레이션이 아닌 가상 시나리오입니다. 새로운 설정 항목과 종료 정책을 도입할 때는 제어 화면, 설정 검증 및 제어 API도 함께 변경하세요.
 
 3D/2D 개요는 프론트의 모터 번호 배치와 위 상태 정보를 이용하므로 별도 3D 메시지 형식은 필요 없습니다. 전체 로봇 3D의 관절 자세는 고정이며, 현재 모터 위치값으로 실제 보행 자세를 재현하는 기능은 포함하지 않습니다.
 
@@ -289,7 +291,7 @@ EEPROM·설정값은 저속 갱신하고 `metadata[].registers`로 전달할 수
 | `events` | 이벤트 배열; 없으면 [] |
 | `system` | 아래 SystemState |
 
-재접속 시에도 먼저 snapshot을 보냅니다. 실행 변경/파일 교체/느린 클라이언트의 큐 초과는 reset으로 최신 상태를 다시 제공합니다. snapshot 획득과 증분 구독 사이에 샘플이 유실되지 않도록 서버에서 연결을 원자적으로 처리해야 합니다. 참고 구현은 `stream.py`입니다.
+재접속 시에도 먼저 snapshot을 보냅니다. 실행 변경/파일 교체/느린 클라이언트의 큐 초과는 reset으로 최신 상태를 다시 제공합니다. snapshot 획득과 증분 구독 사이에 샘플이 유실되지 않도록 서버에서 연결을 원자적으로 처리해야 합니다. 참고 구현은 `backend/telemetry/stream.py`입니다.
 
 ### 추가 측정 `samples`
 
@@ -463,6 +465,6 @@ V2의 슬롯별 API 문서는 `/motors/1/docs` ~ `/motors/8/docs`에서 확인�
 - [ ] 사용자 확인과 이상 해제는 독립적으로 동작한다.
 - [ ] 실제 시작 요청 전에는 SDK로 모터를 제어하지 않는다.
 
-참조 구현과 테스트: `mock_source.py`, `stream.py`, `tests/`, `frontend/src/services/telemetryAdapter.test.ts`, `frontend/e2e/`, `frontend/e2e-control/`.
+참조 구현과 테스트: `backend/adapters/mock/source.py`, `backend/telemetry/stream.py`, `backend/tests/`, `frontend/src/services/telemetryAdapter.test.ts`, `frontend/e2e/`, `frontend/e2e-control/`.
 
 기존 변환 완료 Sample 형식도 호환 처리하지만, 신규 수집 코드는 위 원시 registers 형식을 권장합니다. 프론트엔드의 TypeScript Sample은 정규화 후 내부 표현이므로 그 수십 개의 파생 필드를 백엔드에서 중복 계산할 필요가 없습니다.

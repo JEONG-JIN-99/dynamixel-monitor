@@ -7,11 +7,11 @@ from tempfile import TemporaryDirectory
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from bootstrap import load_package
 load_package()
-from motor_dashboard.mock_source import MockSource
+from motor_dashboard.adapters.mock.source import MockSource
 from motor_dashboard.experiment.configuration import load_config
-from motor_dashboard.stream import TelemetryHub
+from motor_dashboard.telemetry.stream import TelemetryHub
 from motor_dashboard.settings import Settings
-from motor_dashboard.main import create_app
+from motor_dashboard.app import create_app
 
 
 def examples():

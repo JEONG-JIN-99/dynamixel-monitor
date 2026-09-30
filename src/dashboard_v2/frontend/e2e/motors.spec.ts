@@ -109,9 +109,19 @@ test("pause freezes readings across categories and motor switch clears frozen re
   page,
 }) => {
   let frames = 0;
+  let motor7Tick: string | undefined;
   page.on("websocket", (socket) =>
     socket.on("framereceived", ({ payload }) => {
-      if (JSON.parse(String(payload)).type === "samples") frames++;
+      const message = JSON.parse(String(payload));
+      if (message.type === "samples") frames++;
+      if (
+        socket.url().includes("/motors/7/ws/") &&
+        (message.type === "snapshot" || message.type === "reset")
+      ) {
+        // A preceding fleet test may leave completed motor 7 readings in the server.
+        // Switching must show that motor's snapshot, rather than motor 8's frozen data.
+        motor7Tick = message.latest?.registers?.["120"]?.raw?.toLocaleString("ko-KR") ?? "—";
+      }
     }),
   );
   await page.goto("/motors?motor=8");
@@ -140,7 +150,8 @@ test("pause freezes readings across categories and motor switch clears frozen re
   await expect(
     page.getByRole("button", { name: "화면 일시정지", exact: true }),
   ).toHaveAttribute("aria-pressed", "false");
-  await expect(raw).toHaveText("—");
+  await expect.poll(() => motor7Tick).toBeDefined();
+  await expect(raw).toHaveText(motor7Tick!);
 });
 
 for (const width of [1920, 1440, 390]) {

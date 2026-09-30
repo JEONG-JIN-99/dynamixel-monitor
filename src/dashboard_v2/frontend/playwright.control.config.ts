@@ -12,7 +12,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: `"${dashboardPython()}" "${path.resolve("../tests/control_browser_server.py")}"`,
+    command: `"${dashboardPython()}" "${path.resolve("../backend/tests/control_browser_server.py")}"`,
     url: "http://127.0.0.1:8766/api/health",
     reuseExistingServer: false,
     timeout: 20000,
